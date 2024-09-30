@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <!-- Icon and Text -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!-- Text -->
+            <TextView
+                android:id="@+id/folderName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Folder Name"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- Icon at the End -->
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:background="@drawable/group_14" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Dish Delight</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="service_account">service_account</string>
+    <string name="project_id">dishdelight-a72d1</string>
+    <string name="private_key_id">0e37ae00aca84f43c8631efc5069b523160516db</string>
+    <string name="private_key">-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDgSepCwE+qZPcW\n/pwA3eHucXFi+sTPiE7ZhcIhlh+b3wU23WU4IVilzzXerANVm3h8Xs4ewrubZKMi\nXbNZipZpNjm1PeSqv0f9aGg+ySs+O/3rJhLlKWChKBsJJ8TUWWorMJ7lUrmbJhcl\ndy0WLqPRFZ32E59nAqgkd+b4J9ZQIOgD3u/D9xy1R5f0OKj/uSi5zeQ2tA2r1CsK\nhgIXhERUHmZ7MPwTJ1tJmgg2mbNT8Pcqb3OQFzRFXWlyyZtF0NYNc91cbHE8BTpr\nNKfXgd1jSBuh7pH08c1lVaC+cuo6OtHCwM8cPlmrBsUTLqu5mBAB+Y+8WZZBtf6D\nwLln/Y2pAgMBAAECggEABDDpZVgr3OygT+AP2PXMdRzOUDnMn+6lf4vP7/n6yvo4\nwhjSvYDlA8sqj+fBs7GxJ4zLd/huUkXoBPpAgdO0whBK9YOrsFOc9COlcAfpDJOJ\nKAHZAEp8xWInGC2TsF6f3OD+lR0tvfQRImh20ZdrRPrNDfY5qC585xqM+LXg27Qq\nwCpLj8ZO2BYAZgf2JZDS7dqZ5c6QOlKDLSK5UErUljPsUrzeu0OkNi+RDD2+A7YJ\n3bvwVa20t/4HtRO2mF4j3Pi6oiIhjzi+4r5rBN0horPnP++Lig/dEiCcHkfzd2m6\nnBnYSNbqAtMvZ3H9TRw0eMQiy0m+ESdbyl0FYmo2IQKBgQD23UQD4Y4O4OpnaFRO\nOx0mL0A1OXIV/fDPQuby6UjpmHjIwNwUHWgRIUGwVC4FlhE4UJCxiY9OLlIcKECZ\ne+oaOpsQ/TH0v6VlJEmRbl6v0d6u1Qck3SQ+GqJNF9CrXOEY/da5rdHvjEA8KqCZ\nLOHGqrlFOIL1j3btFxiOLGYFCQKBgQDolsYKoBeos2S+nGIpYDI8JdciyuLlzcTx\nZdyvfM1YKk6suB9YWFZ8SSi1/odS0Ucgpw+iM0H4FB4nCjf3c0F9HQMOMn14d2Xm\nKNS3mk9CnI+3Tkro9H6ySEjsquDoKoZtGtc90QzwYXi/s+yjqEdEaIA4PVSvZz3M\noPu8CPULoQKBgQDJagiXXg2IyCuYCUBXv9VtlTm+80rI9LLod/50jK/nn3ZU3T3y\nz3dcGpU858HQ3vrXxqv3nnOk5xgpTxI96CM+GTjxqJN8zGyG1A+OL83jh8k3Pioh\nAqkSXqqzWc3wMsyZlmn+fvp9hyHVtTXpI/xmGl8lQhFfhxkSIjjvrvvh+QKBgQCU\nTQaLYdaUB4Z2Dwp77U06krohAhI4isJHVTaoYkAgNiGh+WhrETBb4N3nZRpt0Oi0\nRjEur9YhUtqC8/4JdmDMYIJBPCpKdH7xiRlQ1EAzbdYo/++9p59dF7//v1jWT78U\ntCeHz9KbNtsiCJwbIcIHOUaAFYL4sDB0WDUKiP+N4QKBgHGQRYYmainvRgO9xWJl\nY8iS8qeAAiwrujNVXaz71icxkLbHh5R1tZa/wEinSVf3ZtDaGBGnrKzVA7J2eTi7\nl7iKUulAByaz8urY4V8+HNMN6Qq12sbvA9YjAy5b21qjXQO0RfOcVr2554s6XkOh\n3ZpoQKZ31wXvTKiJzQTrHa/R\n-----END PRIVATE KEY-----\n</string>
+    <string name="client_email">firebase-adminsdk-l916r@dishdelight-a72d1.iam.gserviceaccount.com</string>
+    <string name="client_id">113148122328512334850</string>
+    <string name="auth_uri">https://accounts.google.com/o/oauth2/auth</string>
+    <string name="token_uri">https://oauth2.googleapis.com/token</string>
+    <string name="auth_provider_x509_cert_url">https://www.googleapis.com/oauth2/v1/certs</string>
+    <string name="client_x509_cert_url">https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-l916r%40dishdelight-a72d1.iam.gserviceaccount.com</string>
+    <string name="universe_domain">googleapis.com</string>
+</resources>

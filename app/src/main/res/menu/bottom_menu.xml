@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:icon="@drawable/baseline_home_filled_24"
+        android:title="Dashboard" />
+
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/search_alt_svgrepo_com"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/nav_folders"
+        android:icon="@drawable/heart_svgrepo_com"
+        android:title="Folders" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/settings_svgrepo_com"
+        android:title="Settings" />
+</menu>
