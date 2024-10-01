@@ -29,19 +29,22 @@
             android:exported="false" />
         <activity
             android:name=".RecipeFolderActivity"
-            android:exported="false" /> <!-- Login Activity: this should be the launcher activity -->
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="false"/>
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".Login"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Main Activity: This will launch after login -->
-        <activity
-            android:name=".Login"
-            android:exported="true" />
+        </activity>
     </application>
 
 </manifest>

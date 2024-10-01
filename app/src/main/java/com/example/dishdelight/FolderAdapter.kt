@@ -33,6 +33,13 @@ class FolderAdapter (private val context: Context, private val folderList: List<
             intent.putExtra("FOLDER_NAME", folder.title)
             it.context.startActivity(intent)
         }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(it.context, RecipeFolderActivity::class.java)
+            // Assuming you have a method to get recipes by folder
+           // val recipes = getRecipesByFolder(folder.title) // Implement this method
+            //intent.putExtra("RECIPE_LIST", ArrayList(recipes)) // Sending the list
+            it.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +22,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        val userid = FirebaseAuth.getInstance().currentUser!!.uid
 
         btnBack = findViewById(R.id.backBtn3)
         etvName = findViewById(R.id.name_input)
@@ -30,74 +32,28 @@ class EditProfileActivity : AppCompatActivity() {
             finish()
         }
 
-        fetchUserProfile()
-        updateProfile()
+        val name = etvName.text.toString()
+        updateUserProfile(userid, name)
     }
+    fun updateUserProfile(userId: String, username: String) {
 
-    private fun fetchUserProfile() {
+        val request = ProfileUpdateRequest(userId, username)
         val apiService = RetrofitClient.getClient().create(UserService::class.java)
-        val call = apiService.getUserProfile()
+        val call = apiService.updateUserProfile(request) // API call
 
-        call.enqueue(object : Callback<ProfileResponse> {
-            override fun onResponse(
-                call: Call<ProfileResponse>,
-                response: Response<ProfileResponse>
-            ) {
+        call.enqueue(object : Callback<ProfileUpdateResponse> {
+            override fun onResponse(call: Call<ProfileUpdateResponse>, response: Response<ProfileUpdateResponse>) {
                 if (response.isSuccessful) {
-                    val profileResponse = response.body()
-                    if (profileResponse != null) {
-                        // Update UI with user profile data
-                        etvName.setText(profileResponse.name)
+                    response.body()?.let {
+                        println(it.message)
                     }
                 } else {
-                    // Handle error response
-                    Toast.makeText(this@EditProfileActivity, "Failed to fetch profile", Toast.LENGTH_SHORT).show()
-                }
-            }
-            override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
-                // Handle failure
-                Toast.makeText(this@EditProfileActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun updateProfile() {
-        val apiService = RetrofitClient.getClient().create(UserService::class.java)
-
-        val profileUpdateRequest = ProfileUpdateRequest(
-            userId = userId,
-            username = etvName.text.toString()
-        )
-
-        val call = apiService.updateProfile(profileUpdateRequest)
-
-        call?.enqueue(object : Callback<ProfileUpdateResponse?> {
-            override fun onResponse(
-                call: Call<ProfileUpdateResponse?>,
-                response: Response<ProfileUpdateResponse?>
-            ) {
-                if (response.isSuccessful) {
-                    // Handle successful response
-                    Toast.makeText(
-                        this@EditProfileActivity,
-                        response.body()?.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    finish() // Optionally close the activity
-                } else {
-                    // Handle error response
-                    Toast.makeText(
-                        this@EditProfileActivity,
-                        "Update failed: ${response.errorBody()?.string()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    println("Error: ${response.errorBody()?.string()}")
                 }
             }
 
-            override fun onFailure(call: Call<ProfileUpdateResponse?>, t: Throwable) {
-                // Handle failure
-                Toast.makeText(this@EditProfileActivity, "Error: ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
+            override fun onFailure(call: Call<ProfileUpdateResponse>, t: Throwable) {
+                println("Failure: ${t.message}")
             }
         })
     }

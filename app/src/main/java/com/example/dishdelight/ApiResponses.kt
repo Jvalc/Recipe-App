@@ -1,7 +1,7 @@
 package com.example.dishdelight
 
-//data class RecipeResponse(val recipes: List<Recipe>)
-//data class SearchResponse(val results: List<Recipe>)
+data class RecipeResponse(val recipes: List<Recipe>)
+data class SearchResponse(val results: List<Recipe>)
 data class SaveRequest(val userId: String, val category: String, val recipeId: String)
 data class SaveResponse(val message: String, val id: String)
 data class NoteRequest(val note: String, val userId: String)
@@ -19,21 +19,9 @@ data class Review(val userId: String, val rating: Int, val comment: String, val 
 
 data class UpdatePreferencesRequest(val dietaryPreferences: List<String>)
 data class UpdatePreferencesResponse(val message: String)
-data class NotificationRequest(val userId: String, val notificationsEnabled: Boolean)
-data class NotificationResponse(val message: String)
-data class WifiPreferenceRequest(val userId: String, val onlyDownloadUsingWifi: Boolean)
-data class WifiPreferenceResponse(val message: String)
 data class ProfileUpdateRequest(val userId: String, val username: String)
 data class ProfileUpdateResponse(val message: String)
 data class ProfileResponse( val name: String)
 
-
-data class SignupRequest(val email: String, val password: String, val name: String, val username: String)
-data class SignupResponse(val message: String, val user: User)
 data class User(val userId: String, val email: String, val name: String, val username: String)
-data class LoginRequest(val email: String, val password: String)
-data class LoginResponse(val message: String, val user: User)
-data class SocialLoginRequest(val idToken: String? = null, val accessToken: String? = null)
-data class SocialLoginResponse(val user: User, val token: String)
-data class PasswordResetRequest(val email: String)
-data class PasswordResetResponse(val message: String)
+

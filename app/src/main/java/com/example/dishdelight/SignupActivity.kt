@@ -57,11 +57,14 @@ class SignupActivity : AppCompatActivity() {
 
         // Set up click listeners
         signUpButton.setOnClickListener {
-            handleSignUp()
+            val userEmail = emailInput.text.toString()
+            val userPassword = passwordInput.text.toString()
+            val userConfPass = confirmPasswordInput.text.toString()
+            registerFirebase(userEmail, userPassword, userConfPass)
         }
 
         googleSignUpButton.setOnClickListener {
-            // Handle Google Sign Up
+            signInWithGoogle()
         }
 
         backIcon.setOnClickListener {
@@ -69,64 +72,70 @@ class SignupActivity : AppCompatActivity() {
             finish() // This will close the activity and return to the previous one
         }
     }
+    private fun registerFirebase(userEmail: String, userPassword: String, userConf: String) {
+        if(userConf.isNullOrBlank()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        }
+        else{
+            if(userPassword == userConf) {
+                auth.createUserWithEmailAndPassword(userEmail, userPassword)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success
+                            Toast.makeText(
+                                baseContext,
+                                "Registration successful",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            val intent = Intent(this@SignupActivity, Login::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            // If sign in fails, display a message to the user.
 
-    private fun handleSignUp() {
-        // Handle the sign-up logic
-        val fullName = fullNameInput.text.toString()
-        val email = emailInput.text.toString()
-        val password = passwordInput.text.toString()
-        val confirmPassword = confirmPasswordInput.text.toString()
+                            Toast.makeText(
+                                baseContext,
+                                "Registration failed.",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        }
+                    }
+            }
+            else{
+                Toast.makeText(this, "Password and Conf Password should match",
+                    Toast.LENGTH_SHORT).show()
 
-        // Validate input and perform sign-up (e.g., API call, Firebase Authentication, etc.)
-        if (password == confirmPassword) {
-            // Proceed with sign-up logic
-        } else {
-            // Show error message
+            }
         }
     }
-
     private fun signInWithGoogle() {
-        val signInIntent: Intent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, 10001)
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account = completedTask.getResult(ApiException::class.java)!!
-            firebaseAuthWithGoogle(account)
-        } catch (e: ApiException) {
-            Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success
-                    Toast.makeText(this, "Google sign in successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to the main activity
-                    navigateToMainActivity()
-                } else {
-                    // If sign in fails
-                    Toast.makeText(this, "Google sign in failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+        if (requestCode == 10001) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val account = task.getResult(ApiException::class.java)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener { task->
+                    if(task.isSuccessful){
+                        val i = Intent(this, MainActivity::class.java)
+                        startActivity(i)
+                    }else {
+                        Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
-    }
 
-    private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java) // Replace with your main activity
-        startActivity(intent)
-        finish()
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        if( FirebaseAuth.getInstance().currentUser != null){
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
+        }
     }
 }

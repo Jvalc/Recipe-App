@@ -1,11 +1,13 @@
 package com.example.dishdelight
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.example.dishdelight.RecipeAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -42,62 +45,13 @@ class DashboardFragment : Fragment() {
         recipeAdapter = RecipeAdapter(requireContext(), recipeList)
         recipeRecycler.adapter = recipeAdapter
 
+        val userid = FirebaseAuth.getInstance().currentUser!!.uid
+
         // Fetch recipes from Firestore
         fetchRecipes()
     }
 
     private fun fetchRecipes() {
-        db.collection("recipes") // Replace with your collection name
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val recipe = document.toObject(Recipe::class.java)
-                    recipeList.add(recipe)
-                }
-                recipeAdapter.notifyDataSetChanged() // Notify adapter of data changes
-            }
-            .addOnFailureListener { exception ->
-                // Handle error
-                exception.printStackTrace()
-            }
-    }
-
-    /*private fun fetchRecommendedRecipes() {
-        val apiService = RetrofitClient.getClient().create(RecipeApiService::class.java)
-        val call = apiService.getRecipes() // Assuming getRecipes returns Call<List<RecipeResponse>>
-
-        call.enqueue(object : Callback<List<RecipeResponse>> {
-            override fun onResponse(call: Call<List<RecipeResponse>>, response: Response<List<RecipeResponse>>) {
-                if (response.isSuccessful && response.body() != null) {
-                    // Clear the current recipe list
-                    recipeList.clear()
-
-                    // Map RecipeResponse objects to Recipe objects and add them to recipeList
-                    response.body()?.let { recipeResponseList ->
-                        val recipeListMapped = recipeResponseList.map { recipeResponse ->
-                            Recipe(
-                                id = recipeResponse.recipes, // Assuming Recipe and RecipeResponse have similar fields
-                                name = recipeResponse.name,
-                                ingredients = recipeResponse.ingredients,
-                                instructions = recipeResponse.instructions
-                                // Add other fields if needed
-                            )
-                        }
-                        recipeList.addAll(recipeListMapped)
-                    }
-
-                    recipeAdapter.notifyDataSetChanged() // Notify the adapter of data changes
-                }
-            }
-
-            override fun onFailure(call: Call<List<RecipeResponse>>, t: Throwable) {
-                // Handle failure
-                t.printStackTrace() // or show an error message to the user
-            }
-        })
-    }*/
-
-    /*private fun fetchRecipes() {
         val apiService = RetrofitClient.getClient().create(RecipeApiService::class.java)
         val call = apiService.getRecipes() // API call
 
@@ -110,11 +64,6 @@ class DashboardFragment : Fragment() {
                              recipeList.add(Recipe)
                          }
                      }
-                    /* response.body()?.let {
-                         for (Recipe in it){
-                             recipeList.add(Recipe)
-                         }
-                     } */
                      recipeRecycler.layoutManager = LinearLayoutManager(context)
 
                      recipeAdapter = RecipeAdapter(requireContext(), recipeList)
@@ -127,5 +76,5 @@ class DashboardFragment : Fragment() {
                  Log.i("GET_LIST", "onFailure: ${t.message}")
              }
          })
-    }*/
+    }
 }

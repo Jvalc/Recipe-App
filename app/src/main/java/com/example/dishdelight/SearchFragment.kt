@@ -2,6 +2,7 @@ package com.example.dishdelight
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchFragment : Fragment() {
 
@@ -38,36 +43,28 @@ class SearchFragment : Fragment() {
         searchBtn = view.findViewById(R.id.searchBtn)
 
         searchBtn.setOnClickListener {
-            performSearch()
         }
     }
+    private fun searchRecipes(ingredients: String, cuisine: String, dietaryPreference: String) {
 
-    private fun performSearch() {
-        val ingredientsInput = searchIngredient.text.toString().trim()
-        val dietInput = searchDiet.text.toString().trim()
-        val cuisineInput = searchCuisine.text.toString().trim()
+        val apiService = RetrofitClient.getClient().create(RecipeApiService::class.java)
+        val call = apiService.searchRecipes(ingredients, cuisine, dietaryPreference) // API call
 
-        // Split the ingredients into a list
-        val ingredientsList = ingredientsInput.split(",").map { it.trim() }
-
-        // Perform the search in Firestore
-        db.collection("recipes")
-            .whereArrayContainsAny("ingredients", ingredientsList) // Use ingredients array
-            .whereEqualTo("dietaryPreferences", dietInput) // Adjust the field name accordingly
-            .whereEqualTo("cuisineType", cuisineInput) // Adjust the field name accordingly
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Toast.makeText(requireContext(), "No recipes found", Toast.LENGTH_SHORT).show()
-                } else {
-                    val foundRecipes = documents.toObjects(Recipe::class.java)
-                    val intent = Intent(requireContext(), SearchRecipeActivity::class.java)
-                    intent.putParcelableArrayListExtra("recipeList", ArrayList(foundRecipes))
-                    startActivity(intent)
+        call.enqueue(object : Callback<SearchResponse> {
+                override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
+                    if (response.isSuccessful) {
+                        val recipes = response.body()?.results
+                        Log.d("SearchActivity", "Recipes: $recipes")
+                    } else {
+                        // Handle the error response
+                        Log.e("SearchActivity", "Error: ${response.errorBody()?.string()}")
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Error fetching recipes: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
+
+                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                    // Handle the failure
+                    Log.e("SearchActivity", "Failure: ${t.message}")
+                }
+            })
     }
 }

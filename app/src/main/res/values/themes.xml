@@ -5,5 +5,8 @@
         <item name="colorPrimary">#606060</item>
     </style>
 
-    <style name="Theme.DishDelight" parent="Base.Theme.DishDelight" />
+    <style name="Theme.DishDelight" parent="Base.Theme.DishDelight" >
+        <item name="android:windowBackground">#F1F1F1</item>
+    </style>
+
 </resources>

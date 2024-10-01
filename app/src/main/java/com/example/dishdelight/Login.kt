@@ -27,7 +27,6 @@ class Login : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var googleSignInButton: Button
     private lateinit var signUpTextView: TextView
-    private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,80 +48,76 @@ class Login : AppCompatActivity() {
         googleSignInButton = findViewById(R.id.googleSignInButton)
         signUpTextView = findViewById(R.id.signUpTextView)
 
-        loginButton.setOnClickListener { loginUser() }
-        googleSignInButton.setOnClickListener { signInWithGoogle() }
-        signUpTextView.setOnClickListener { navigateToSignUp() }
+        loginButton.setOnClickListener {
+            logIn()
+        }
+        googleSignInButton.setOnClickListener {
+            signInWithGoogle()
+        }
+        signUpTextView.setOnClickListener {
+            val intent = Intent(this@Login, SignupActivity::class.java)
+            startActivity(intent)
+        }
     }
-    private fun loginUser() {
-        val email = emailEditText.text.toString().trim()
-        val password = passwordEditText.text.toString().trim()
+    private fun logIn() {
+        val email = emailEditText.text.toString()
+        val pass = passwordEditText.text.toString()
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+        // Check if email and password are not blank
+        if (email.isBlank() || pass.isBlank()) {
+            Toast.makeText(this, "Email and password can't be blank", Toast.LENGTH_SHORT).show()
             return
         }
 
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to the main activity
-                    navigateToMainActivity()
-                } else {
-                    // If sign in fails
-                    Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+        // Sign in with email and password
+        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val user = auth.currentUser
+                Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                user?.let {
+                    // User is successfully authenticated
+                    val i = Intent(this, MainActivity::class.java)
+                    startActivity(i)
                 }
+                finish()
+            } else {
+                Toast.makeText(this, "Log In Failed", Toast.LENGTH_SHORT).show()
             }
+        }
     }
 
     private fun signInWithGoogle() {
-        val signInIntent: Intent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, 10001)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account = completedTask.getResult(ApiException::class.java)!!
-            firebaseAuthWithGoogle(account)
-        } catch (e: ApiException) {
-            Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success
-                    Toast.makeText(this, "Google sign in successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to the main activity
-                    navigateToMainActivity()
-                } else {
-                    // If sign in fails
-                    Toast.makeText(this, "Google sign in failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+        if (requestCode == 10001) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val account = task.getResult(ApiException::class.java)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener { task->
+                    if(task.isSuccessful){
+                        val i = Intent(this, MainActivity::class.java)
+                        startActivity(i)
+                    }else {
+                        Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
+
+        }
     }
 
-    private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java) // Replace with your main activity
-        startActivity(intent)
-        finish()
-    }
-
-    private fun navigateToSignUp() {
-        val intent = Intent(this, SignupActivity::class.java) // Replace with your sign-up activity
-        startActivity(intent)
+    override fun onStart() {
+        super.onStart()
+        if( FirebaseAuth.getInstance().currentUser != null){
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
+        }
     }
 }

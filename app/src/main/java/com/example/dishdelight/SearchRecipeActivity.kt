@@ -21,7 +21,7 @@ class SearchRecipeActivity : AppCompatActivity() {
         recipeRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Get the list of recipes from the intent
-        recipeList = intent.getParcelableArrayListExtra("recipeList") ?: emptyList()
+       // recipeList = intent.getParcelableArrayListExtra("recipeList") ?: emptyList()
         // Set up the adapter
         recipeAdapter = RecipeAdapter(this, recipeList)
         recipeRecyclerView.adapter = recipeAdapter
