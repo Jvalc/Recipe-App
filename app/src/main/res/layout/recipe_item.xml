@@ -32,7 +32,6 @@
 
         </LinearLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -351,8 +350,9 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginBottom="10dp"
                         android:textSize="18sp"
-                        android:text="Step 1: Mix ingredients.\nStep 2: Bake for 30 minutes."
+                        android:text="No steps"
                         android:visibility="gone" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -413,7 +413,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginBottom="10dp"
                         android:textSize="18sp"
-                        android:text="Best served warm."
+                        android:text="No notes"
                         android:visibility="gone" />
 
                 </LinearLayout>

@@ -11,15 +11,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FoldersFragment : Fragment() {
     private lateinit var tvName : TextView
 
     private lateinit var folderRecycler : RecyclerView
     private lateinit var folderAdapter: FolderAdapter
-    private var folderList: MutableList<Folder> = mutableListOf()
 
     private lateinit var timePicker: TimePicker
     private lateinit var startTimerButton: Button
@@ -54,8 +58,9 @@ class FoldersFragment : Fragment() {
 
         folderRecycler.layoutManager = LinearLayoutManager(context)
 
-        folderAdapter = FolderAdapter(requireContext(), folderList)
-        folderRecycler.adapter = folderAdapter
+        val userid = FirebaseAuth.getInstance().currentUser!!.uid
+
+        fetchFolders(userid)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             timePicker.hour = 0
@@ -65,7 +70,6 @@ class FoldersFragment : Fragment() {
             timePicker.currentMinute = 0
         }
         timePicker.setIs24HourView(true)
-
 
         //mediaPlayer = MediaPlayer.create(this, R.raw.alarm_sound) // Add alarm sound
 
@@ -80,6 +84,25 @@ class FoldersFragment : Fragment() {
         pauseTimerButton.setOnClickListener {
             pauseTimer()
         }
+    }
+    private fun fetchFolders( userid : String) {
+        RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .getCategories(userid).enqueue(object : Callback<List<String>> {
+            override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        folderAdapter = FolderAdapter(requireContext(), it)
+                        folderRecycler.adapter = folderAdapter
+                    }
+                } else{
+                    Toast.makeText(requireContext(), "Failed to fetch folder names", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun startTimer() {

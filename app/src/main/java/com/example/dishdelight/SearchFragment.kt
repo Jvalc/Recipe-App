@@ -2,7 +2,6 @@ package com.example.dishdelight
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +20,6 @@ class SearchFragment : Fragment() {
     private lateinit var searchDiet: EditText
     private lateinit var searchCuisine: EditText
     private lateinit var searchBtn: Button
-    private val db: FirebaseFirestore = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,28 +38,63 @@ class SearchFragment : Fragment() {
         searchBtn = view.findViewById(R.id.searchBtn)
 
         searchBtn.setOnClickListener {
+            searchRecipes()
         }
     }
-    private fun searchRecipes(ingredients: String, cuisine: String, dietaryPreference: String) {
 
-        val apiService = RetrofitClient.getClient().create(RecipeApiService::class.java)
-        val call = apiService.searchRecipes(ingredients, cuisine, dietaryPreference) // API call
+    private fun searchRecipes() {
+        val gson = Gson()
 
-        call.enqueue(object : Callback<SearchResponse> {
+        val ingredients = searchIngredient.text.toString()
+        val diet = searchDiet.text.toString()
+        val cuisine = searchCuisine.text.toString()
+
+        // Create a HashMap to hold query parameters
+        val queryParams = mutableMapOf<String, String>()
+
+        // Add parameters to the map only if they are not empty
+        if (!ingredients.isNullOrEmpty()) {
+            queryParams["ingredients"] = ingredients
+        }
+        if (!cuisine.isNullOrEmpty()) {
+            queryParams["cuisineType"] = cuisine
+        }
+        if (!diet.isNullOrEmpty()) {
+            queryParams["dietaryPreferences"] = diet
+        }
+
+        // If queryParams is empty, notify the user and don't make the API call
+        if (queryParams.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter at least one search parameter", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Call the API using Retrofit with the valid queryParams map
+        RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .searchRecipes(queryParams)
+            .enqueue(object : Callback<SearchResponse> {
+
                 override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
                     if (response.isSuccessful) {
-                        val recipes = response.body()?.results
-                        Log.d("SearchActivity", "Recipes: $recipes")
+                        val recipes = response.body()?.results ?: emptyList()
+                        if (recipes.isNotEmpty()) {
+                            val recipesJson = gson.toJson(recipes)
+                            // Pass results to the next activity
+                            val intent = Intent(requireActivity(), SearchRecipeActivity::class.java)
+                            intent.putExtra("RECIPE_RESULTS_JSON", recipesJson)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(requireContext(), "No recipes found matching your criteria.", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        // Handle the error response
-                        Log.e("SearchActivity", "Error: ${response.errorBody()?.string()}")
+                        Toast.makeText(requireContext(), "Failed to search recipes: ${response.message()}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    // Handle the failure
-                    Log.e("SearchActivity", "Failure: ${t.message}")
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
     }
+
 }

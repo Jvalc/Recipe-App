@@ -4,62 +4,58 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RecipeFolderActivity : AppCompatActivity() {
+    private lateinit var folderName: String
+
     private  lateinit var btnBack : ImageButton
     private lateinit var tvFolderName : TextView
     private  lateinit var recipeRecycler : RecyclerView
     private lateinit var recipeAdapter: RecipeAdapter
-    private var recipeList: MutableList<Recipe> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_folder)
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
+        folderName = intent.getStringExtra("FOLDER_NAME") ?: "Default Folder Name"
 
         btnBack = findViewById(R.id.backBtn2)
         tvFolderName = findViewById(R.id.folderName)
         recipeRecycler = findViewById(R.id.recipFolderRecyclerView)
 
+        recipeRecycler.layoutManager = LinearLayoutManager(this)
+        tvFolderName.text = folderName
+
         btnBack.setOnClickListener{
             finish()
         }
-        val name = tvFolderName.text.toString()
 
-        getSavedRecipes(userid, name )
+        getSavedRecipes(userid, folderName )
     }
-
-    fun getSavedRecipes(userId: String, folderName: String) {
-
-        val apiService = RetrofitClient.getClient().create(RecipeApiService::class.java)
-        val call = apiService.getSavedRecipes(userId, folderName) // API call
-
-        call.enqueue(object : retrofit2.Callback<List<Recipe>> {
-            override fun onResponse(call: Call<List<Recipe>>, response: retrofit2.Response<List<Recipe>>) {
-                if (response.isSuccessful) {
-                    val recipeResponse = response.body()
-                    recipeResponse?.let{
-                        for (Recipe in it){
-                            recipeList.add(Recipe)
+    private fun getSavedRecipes( userid : String, folderName: String) {
+        RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .getSavedRecipes(userid, folderName).enqueue(object : Callback<List<Recipe>> {
+                override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            recipeAdapter = RecipeAdapter(userid, it)
+                            recipeRecycler.adapter = recipeAdapter
                         }
+                    } else {
+                        Toast.makeText(this@RecipeFolderActivity, "Failed to fetch saved recipes", Toast.LENGTH_SHORT).show()
                     }
-                    recipeRecycler.layoutManager = LinearLayoutManager(applicationContext)
-
-                    recipeAdapter = RecipeAdapter(applicationContext , recipeList)
-                    recipeRecycler.adapter = recipeAdapter
-                    recipeAdapter.notifyDataSetChanged()
-                } else {
                 }
-            }
 
-            override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
-                // Handle failure
-                t.printStackTrace()
-            }
-        })
+                override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
+                    Toast.makeText(this@RecipeFolderActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }

@@ -19,12 +19,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import retrofit2.create
 
 class DashboardFragment : Fragment() {
     private lateinit var recipeRecycler : RecyclerView
     private lateinit var recipeAdapter: RecipeAdapter
-    private lateinit var recipeList: MutableList<Recipe>
-    private val db: FirebaseFirestore = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,43 +37,31 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // Initialize RecyclerView
         recipeRecycler = view.findViewById(R.id.recommendationsRecyclerView)
-        recipeRecycler.layoutManager = LinearLayoutManager(requireContext())
-
-        // Initialize recipe list and adapter
-        recipeList = mutableListOf()
-        recipeAdapter = RecipeAdapter(requireContext(), recipeList)
-        recipeRecycler.adapter = recipeAdapter
-
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        // Fetch recipes from Firestore
-        fetchRecipes()
+        // Set layout manager
+        recipeRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+        // Fetch recipes from the API
+        fetchRecipes(userid)
     }
+    private fun fetchRecipes( userid : String) {
+        RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .getRecipes().enqueue(object : Callback<List<Recipe>> {
+                override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
+                    if(response.isSuccessful){
+                        response.body()?.let {
+                            recipeAdapter = RecipeAdapter(userid, it)
+                            recipeRecycler.adapter = recipeAdapter
+                        }
+                    } else{
+                        Toast.makeText(requireContext(), "Failed to fetch recipes", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
-    private fun fetchRecipes() {
-        val apiService = RetrofitClient.getClient().create(RecipeApiService::class.java)
-        val call = apiService.getRecipes() // API call
-
-         call.enqueue(object : Callback<List<Recipe>> {
-             override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
-                 if (response.isSuccessful){
-                     val recipeResponse = response.body()
-                     recipeResponse?.let{
-                         for (Recipe in it){
-                             recipeList.add(Recipe)
-                         }
-                     }
-                     recipeRecycler.layoutManager = LinearLayoutManager(context)
-
-                     recipeAdapter = RecipeAdapter(requireContext(), recipeList)
-                     recipeRecycler.adapter = recipeAdapter
-                     recipeAdapter.notifyDataSetChanged()
-                 }
-             }
-             override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
-                 // Handle failure (e.g., show an error message)
-                 Log.i("GET_LIST", "onFailure: ${t.message}")
-             }
-         })
+                override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }

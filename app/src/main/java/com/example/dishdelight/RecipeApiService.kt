@@ -8,26 +8,27 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface RecipeApiService {
-    // Get recommendations for recipes based on user preferences
+    // Get recommendations for recipes based on user preferences x
     @GET("recipes/")
     fun getRecipes(): Call<List<Recipe>>
 
-    // Search for recipes with specific parameters
-    @GET("recipes/search")
-    fun searchRecipes(
-        @Query("ingredients") ingredients: String?,
-        @Query("cuisine") cuisine: String?,
-        @Query("dietaryPreference") dietaryPreference: String?
-    ): Call<SearchResponse>
+    // Search for recipes with specific parameters x
+    @GET("/recipes/search")
+    fun searchRecipes(@QueryMap options: Map<String, String>): Call<SearchResponse>
 
-    // Save a recipe to a specific category
-    @POST("save")
-    fun saveRecipe(@Body saveRequest: SaveRequest): Call<SaveResponse>
+    // Save a recipe to a specific category x
+    @POST("/recipes/save")
+    fun saveRecipe(@Body recipeSaveRequest: RecipeSaveRequest): Call<SaveResponse>
 
-    // Retrieve saved recipes from a specific folder
-    @GET("folders/{userId}/{folderName}")
+    // Retrieve list of categories/files created by the user x
+    @GET("/recipes/categories/{userId}")
+    fun getCategories(@Path("userId") userId: String): Call<List<String>>
+
+    // Retrieve saved recipes from a specific folder x
+    @GET("/recipes/folders/{userId}/{folderName}")
     fun getSavedRecipes(
         @Path("userId") userId: String,
         @Path("folderName") folderName: String
@@ -47,8 +48,8 @@ interface RecipeApiService {
         @Path("recipeId") recipeId: String
     ): Call<List<Note>>
 
-    // Share a recipe
-    @POST("share")
+    // Share a recipe x
+    @POST("recipes/share")
     fun shareRecipe(@Body shareRequest: ShareRequest): Call<ShareResponse>
 
     // Delete a saved recipe

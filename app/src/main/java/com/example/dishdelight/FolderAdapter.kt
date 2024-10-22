@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class FolderAdapter (private val context: Context, private val folderList: List<Folder>) :
+class FolderAdapter (private val context: Context, private val folderList: List<String>) :
     RecyclerView.Adapter<FolderAdapter.FolderViewHolder>() {
 
     inner class FolderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -19,26 +19,19 @@ class FolderAdapter (private val context: Context, private val folderList: List<
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.folder_item, parent, false)
         return FolderViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
         val folder = folderList[position]
-        holder.folderName.text = folder.title
+        holder.folderName.text = folder
 
         holder.itemView.setOnClickListener {
-            // Here ensure you are starting the ChatDetailActivity
-            val intent = Intent(it.context, RecipeFolderActivity::class.java)
-            intent.putExtra("FOLDER_NAME", folder.title)
-            it.context.startActivity(intent)
-        }
-        holder.itemView.setOnClickListener {
-            val intent = Intent(it.context, RecipeFolderActivity::class.java)
-            // Assuming you have a method to get recipes by folder
-           // val recipes = getRecipesByFolder(folder.title) // Implement this method
-            //intent.putExtra("RECIPE_LIST", ArrayList(recipes)) // Sending the list
-            it.context.startActivity(intent)
+            // Starting the RecipeFolderActivity
+            val intent = Intent(context, RecipeFolderActivity::class.java)
+            intent.putExtra("FOLDER_NAME", folder) // Use the folder name directly
+            context.startActivity(intent)
         }
     }
 
