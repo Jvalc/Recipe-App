@@ -86,7 +86,8 @@
                 android:padding="10dp"
                 android:textStyle="bold"
                 android:textColor="#606060"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:editable="false"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

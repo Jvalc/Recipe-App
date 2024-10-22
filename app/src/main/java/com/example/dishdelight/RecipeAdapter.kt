@@ -56,7 +56,10 @@ class RecipeAdapter(
         holder.recipeValue.text = recipe.steps
             .mapIndexed { index, step -> "${index + 1}. $step" }
             .joinToString("\n") { "• $it" }
-        holder.notesValue.text = recipe.notes.joinToString("\n") { "• $it" }
+
+        val notes = recipe.notes ?: emptyList()  // Ensure the list is not null
+        var recipeId = recipe.id
+        getUserNotes(userId, recipeId, holder.context, holder)
 
         // Load recipe image (use Glide or any image loading library)
         Glide.with(holder.itemView.context)
@@ -105,6 +108,26 @@ class RecipeAdapter(
 
     override fun getItemCount(): Int {
         return recipeList.size
+    }
+    private fun getUserNotes(userId: String, recipeId: String, context: Context, holder: RecipeViewHolder) {
+        val call = RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .getUserNotes(userId, recipeId)
+
+        call.enqueue(object : Callback<NotesResponse> {
+            override fun onResponse(call: Call<NotesResponse>, response: Response<NotesResponse>) {
+                if (response.isSuccessful) {
+                    val notesList = response.body()?.notes
+
+                    if (notesList != null) {
+                        holder.notesValue.text = notesList.joinToString("\n") { "• $it" }
+                    }
+                } else {
+                    Toast.makeText( context, "Failed to fetch saved recipes", Toast.LENGTH_SHORT ).show()                }
+            }
+
+            override fun onFailure(call: Call<NotesResponse>, t: Throwable) {
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()            }
+        })
     }
     private fun promptFileNameAndSaveRecipe(userId: String, recipeId: String, context: Context) {
         // Show an AlertDialog to prompt for file name

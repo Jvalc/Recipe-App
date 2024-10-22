@@ -2,6 +2,7 @@ package com.example.dishdelight
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +20,14 @@ class FolderAdapter (private val context: Context, private val folderList: List<
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.folder_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.folder_item, parent, false)
         return FolderViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
         val folder = folderList[position]
+        Log.d("FolderAdapter", "Binding folder: $folder at position $position")
         holder.folderName.text = folder
 
         holder.itemView.setOnClickListener {

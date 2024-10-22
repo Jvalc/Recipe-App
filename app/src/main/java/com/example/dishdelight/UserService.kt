@@ -9,16 +9,16 @@ import retrofit2.http.Path
 
 interface UserService {
     // Update user's profile information
-    @PUT("/user/profile")
-    fun updateUserProfile
-        (@Body request: ProfileUpdateRequest
-    ): Call<ProfileUpdateResponse>
+    @PUT("/settings/user/profile")
+    fun updateUserProfile(
+        @Body request: UserProfileUpdateRequest
+    ): Call<UpdateResponse>
 
     // Update user's dietary preferences
-    @PATCH("/users/{userId}/preferences")
-    fun updateUserPreferences(
+    @PATCH("/settings/users/{userId}/preferences")
+    fun updateDietaryPreferences(
         @Path("userId") userId: String,
-        @Body request: UpdatePreferencesRequest
-    ): Call<UpdatePreferencesResponse>
+        @Body dietaryPreferences: UpdateDietaryPreferencesRequest
+    ): Call<UpdateResponse>
 }
 

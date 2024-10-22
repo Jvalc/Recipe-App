@@ -32,12 +32,19 @@
 
 </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvTerms"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="All terms"
-        android:textSize="16sp"
-        android:layout_margin="20dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"/>
+
+    </ScrollView>
+
 
 </LinearLayout>

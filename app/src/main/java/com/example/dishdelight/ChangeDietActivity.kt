@@ -6,19 +6,41 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ChangeDietActivity : AppCompatActivity() {
     private  lateinit var btnBack : ImageButton
+
     private lateinit var selectCard : MaterialCardView
     private lateinit var tvDiets : TextView
     private lateinit var selectedDiets: BooleanArray
     val dietList = ArrayList<Int>()
-    val dietArray = arrayOf("Gluten-free", "Vegan", "Fast food")
+    val dietArray = arrayOf(
+        "Fast food",
+        "Vegetarian",
+        "Vegan",
+        "Paleo",
+        "Keto",
+        "Gluten-Free",
+        "Dairy-Free",
+        "Pescatarian",
+        "Mediterranean",
+        "Low-Carb",
+        "Low-Fat",
+        "Whole30",
+        "Carnivore",
+        "Flexitarian",
+        "High-Protein",
+        "Sugar-Free"
+    );
+
     private lateinit var btnUpdateDiet : Button
 
     @SuppressLint("MissingInflatedId")
@@ -46,30 +68,33 @@ class ChangeDietActivity : AppCompatActivity() {
         val text = tvDiets.text.toString()
         val stringList = text.split(",").map { it.trim() } // Using `trim()` to remove any leading/trailing spaces
 
-        updateUserPreferences(userid, stringList )
-
+        btnUpdateDiet.setOnClickListener {
+            updateUserPreferences(userid, stringList )
+        }
     }
     fun updateUserPreferences(userId: String, preferences: List<String>) {
-        val request = UpdatePreferencesRequest(preferences)
-        val apiService = RetrofitClient.getClient().create(UserService::class.java)
-        val call = apiService.updateUserPreferences(userId, request) // API call
 
-        call.enqueue(object : retrofit2.Callback<UpdatePreferencesResponse> {
-            override fun onResponse(call: Call<UpdatePreferencesResponse>, response: retrofit2.Response<UpdatePreferencesResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        println(it.message)
+        val request = UpdateDietaryPreferencesRequest(preferences)
+
+        // Make the PATCH request
+        RetrofitClient.getClient().create(UserService::class.java)
+            .updateDietaryPreferences(userId, request)
+            .enqueue(object : Callback<UpdateResponse> {
+                override fun onResponse(call: Call<UpdateResponse>, response: Response<UpdateResponse>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@ChangeDietActivity, "Preference updated successfully", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this@ChangeDietActivity, "Failed to update preferences", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    println("Error: ${response.errorBody()?.string()}")
                 }
-            }
 
-            override fun onFailure(call: Call<UpdatePreferencesResponse>, t: Throwable) {
-                println("Failure: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                    Toast.makeText(this@ChangeDietActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
+
     private fun showDietsDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Select Diet")

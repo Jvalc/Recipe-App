@@ -39,14 +39,14 @@ interface RecipeApiService {
     fun addNote(
         @Path("recipeId") recipeId: String,
         @Body noteRequest: NoteRequest
-    ): Call<NoteResponse>
+    ): Call<NotesResponse>
 
     // Get notes for a specific recipe by user
-    @GET("user/{userId}/{recipeId}/notes")
-    fun getNotesForRecipe(
+    @GET("/recipes/user/{userId}/{recipeId}/notes")
+    fun getUserNotes(
         @Path("userId") userId: String,
         @Path("recipeId") recipeId: String
-    ): Call<List<Note>>
+    ): Call<NotesResponse>
 
     // Share a recipe x
     @POST("recipes/share")

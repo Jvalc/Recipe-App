@@ -13,7 +13,7 @@ data class Recipe(
     val imageUrl: String = "",
     val ingredients: List<String> = listOf(),
     val steps: List<String> = listOf(),
-    val notes: List<Note> = listOf()
+    val notes: List<Note> = emptyList()
 )
 
 
