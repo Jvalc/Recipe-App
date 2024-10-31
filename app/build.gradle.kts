@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.dishdelight"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.dishdelight"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -40,6 +40,9 @@ android {
 dependencies {
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     implementation("com.google.firebase:firebase-firestore-ktx:25.1.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.3")
+    implementation("androidx.biometric:biometric-ktx:1.1.0")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
     kapt ("com.github.bumptech.glide:compiler:4.15.1")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
@@ -56,4 +59,5 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation ("com.google.code.gson:gson:2.8.9")
+    implementation ("androidx.biometric:biometric-ktx:1.4.0-alpha02")
 }

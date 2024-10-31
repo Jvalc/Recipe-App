@@ -2,11 +2,8 @@ package com.example.dishdelight
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -42,31 +39,27 @@ class RecipeFolderActivity : AppCompatActivity() {
 
         getSavedRecipes(userid, folderName)
     }
-    private fun getSavedRecipes(userid: String, folderName: String) {
-        val call = RetrofitClient.getClient().create(RecipeApiService::class.java)
-            .getSavedRecipes(userid, folderName)
+    private fun getSavedRecipes(userId: String, folderName: String) {
+        RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .getSavedRecipes(userId, folderName).enqueue(object : Callback<List<Recipe>> {
+                override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
+                    if (response.isSuccessful) {
+                        // Handle the list of recipes (e.g., display in RecyclerView)
+                        response.body()?.let {
+                            recipeAdapter = RecipeAdapter(userId, it)
+                            recipeRecycler.adapter = recipeAdapter
+                        }
 
-        call.enqueue(object : Callback<List<Recipe>> {
-            override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        Log.d("RecipeAdapterData", "Data: $it")
-                        recipeAdapter = RecipeAdapter(userid, it)
-                        recipeRecycler.adapter = recipeAdapter
+                    } else {
+                        // Handle API error response
+                        println("Error: ${response.message()}")
                     }
-                } else {
-                    Toast.makeText(
-                        this@RecipeFolderActivity,
-                        "Failed to fetch saved recipes",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            }
 
-            override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
-                Toast.makeText(this@RecipeFolderActivity, "Error: ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        })
+                override fun onFailure(call: Call<List<Recipe>>, t: Throwable) {
+                    // Handle failure, like network error
+                    println("Failed to retrieve recipes: ${t.message}")
+                }
+            })
     }
 }

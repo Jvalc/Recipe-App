@@ -1,9 +1,6 @@
 package com.example.dishdelight
 
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.example.dishdelight.RecipeAdapter
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import retrofit2.create
 
 class DashboardFragment : Fragment() {
     private lateinit var recipeRecycler : RecyclerView
@@ -50,8 +42,10 @@ class DashboardFragment : Fragment() {
             .getRecipes().enqueue(object : Callback<List<Recipe>> {
                 override fun onResponse(call: Call<List<Recipe>>, response: Response<List<Recipe>>) {
                     if(response.isSuccessful){
-                        response.body()?.let {
-                            recipeAdapter = RecipeAdapter(userid, it)
+                        response.body()?.let {allRecipes ->
+                            // Randomly shuffle the recipes and take the first 20
+                            val randomRecipes = allRecipes.shuffled().take(20)
+                            recipeAdapter = RecipeAdapter(userid, randomRecipes)
                             recipeRecycler.adapter = recipeAdapter
                         }
                     } else{

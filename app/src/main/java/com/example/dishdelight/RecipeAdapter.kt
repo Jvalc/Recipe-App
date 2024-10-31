@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import retrofit2.Call
@@ -27,6 +26,7 @@ class RecipeAdapter(
         val recipeTitle : TextView = itemView.findViewById(R.id.recipeTitle)
         val cookingTimeValue: TextView = itemView.findViewById(R.id.cookingTimeValue)
         val servingsValue: TextView = itemView.findViewById(R.id.servingsValue)
+        val cuisineValue: TextView = itemView.findViewById(R.id.cuisineValue)
         val recipeImage: ImageView = itemView.findViewById(R.id.recipeImage)
         val moreBtn : Button = itemView.findViewById(R.id.btnMore)
         val shareBtn : LinearLayout = itemView.findViewById(R.id.shareBtn)
@@ -38,6 +38,7 @@ class RecipeAdapter(
         val recipeValue : TextView = itemView.findViewById(R.id.recipeValue)
         val notesDropdown : ImageView = itemView.findViewById(R.id.notesDropdown)
         val notesValue : TextView = itemView.findViewById(R.id.notesValue)
+        val editBtn : ImageView = itemView.findViewById(R.id.editBtn)
 
         val context: Context = itemView.context
     }
@@ -51,13 +52,13 @@ class RecipeAdapter(
         val recipe = recipeList[position]
         holder.recipeTitle.text = recipe.recipeName
         holder.cookingTimeValue.text = "${recipe.cookingTime}"
-        holder.servingsValue.text = "${recipe.servingSize} people"
+        holder.servingsValue.text = recipe.servingSize
+        holder.cuisineValue.text = recipe.cuisineType
         holder.ingredientsValue.text = recipe.ingredients.joinToString("\n") { "• $it" }
         holder.recipeValue.text = recipe.steps
             .mapIndexed { index, step -> "${index + 1}. $step" }
-            .joinToString("\n") { "• $it" }
+            .joinToString("\n") { "step $it" }
 
-        val notes = recipe.notes ?: emptyList()  // Ensure the list is not null
         var recipeId = recipe.id
         getUserNotes(userId, recipeId, holder.context, holder)
 
@@ -68,9 +69,16 @@ class RecipeAdapter(
             .into(holder.recipeImage)
 
         holder.moreBtn.setOnClickListener {
-            holder.shareBtn.visibility = View.VISIBLE
-            holder.downloadBtn.visibility = View.VISIBLE
-            holder.saveBtn.visibility = View.VISIBLE
+            if(holder.shareBtn.visibility == View.VISIBLE ){
+                holder.shareBtn.visibility = View.GONE
+                holder.downloadBtn.visibility = View.GONE
+                holder.saveBtn.visibility = View.GONE
+
+            } else{
+                holder.shareBtn.visibility = View.VISIBLE
+                holder.downloadBtn.visibility = View.VISIBLE
+                holder.saveBtn.visibility = View.VISIBLE
+            }
         }
 
         holder.shareBtn.setOnClickListener{
@@ -78,7 +86,6 @@ class RecipeAdapter(
             shareRecipe(holder.context, recipeId)
         }
         holder.saveBtn.setOnClickListener{
-            val recipeId = recipe.id // Get the recipe ID
             promptFileNameAndSaveRecipe(userId, recipeId, holder.context)
 
         }
@@ -100,33 +107,81 @@ class RecipeAdapter(
         holder.notesDropdown.setOnClickListener {
             if (holder.notesValue.visibility == View.VISIBLE) {
                 holder.notesValue.visibility = View.GONE
+                holder.editBtn.visibility = View.GONE
             } else {
                 holder.notesValue.visibility = View.VISIBLE
+                holder.editBtn.visibility = View.VISIBLE
             }
+        }
+
+        holder.editBtn.setOnClickListener{
+            promptNewNote(userId, recipeId, holder.context, holder)
         }
     }
 
     override fun getItemCount(): Int {
         return recipeList.size
     }
+    private fun promptNewNote(userId: String, recipeId: String, context: Context, holder: RecipeViewHolder) {
+        // Show an AlertDialog to prompt for file name
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Enter the new note to recipe")
+
+        // Set up the input field
+        val input = android.widget.EditText(context)
+        builder.setView(input)
+
+        // Set up the dialog buttons
+        builder.setPositiveButton("Save") { _, _ ->
+            val note = input.text.toString()
+
+            if (note.isNotEmpty()) {
+                // Call the API and save the recipe
+                saveNote(userId, note, recipeId, context, holder)
+            }
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+        builder.show()
+    }
+    private fun saveNote(userId: String, note: String, recipeId: String, context: Context, holder: RecipeViewHolder) {
+        val request = NoteRequest(note, userId)
+
+        RetrofitClient.getClient().create(RecipeApiService::class.java)
+            .addNote(recipeId, request).enqueue(object : Callback<NotesResponse> {
+                override fun onResponse(call: Call<NotesResponse>, response: Response<NotesResponse>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(context, "Noted saved!", Toast.LENGTH_SHORT).show()
+                        getUserNotes(userId, recipeId, context, holder)
+                    } else {
+                        Toast.makeText(context, "Error: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<NotesResponse>, t: Throwable) {
+                    Toast.makeText(context, "Failed to add note: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
     private fun getUserNotes(userId: String, recipeId: String, context: Context, holder: RecipeViewHolder) {
         val call = RetrofitClient.getClient().create(RecipeApiService::class.java)
-            .getUserNotes(userId, recipeId)
+            .getNotes(userId, recipeId)
 
         call.enqueue(object : Callback<NotesResponse> {
             override fun onResponse(call: Call<NotesResponse>, response: Response<NotesResponse>) {
                 if (response.isSuccessful) {
-                    val notesList = response.body()?.notes
-
-                    if (notesList != null) {
-                        holder.notesValue.text = notesList.joinToString("\n") { "• $it" }
+                    val notes = response.body()?.notes ?: emptyList()
+                    // Process the list of notes here, e.g., display them in a RecyclerView
+                    if (notes != null) {
+                        holder.notesValue.text = notes.joinToString("\n") { "• ${it.note}" }
                     }
                 } else {
-                    Toast.makeText( context, "Failed to fetch saved recipes", Toast.LENGTH_SHORT ).show()                }
+                    holder.notesValue.text = "No notes found"
+                }
             }
 
             override fun onFailure(call: Call<NotesResponse>, t: Throwable) {
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()            }
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
         })
     }
     private fun promptFileNameAndSaveRecipe(userId: String, recipeId: String, context: Context) {
@@ -144,28 +199,28 @@ class RecipeAdapter(
 
             if (category.isNotEmpty()) {
                 // Call the API and save the recipe
-                saveRecipeToServer(userId, category, recipeId, context)
+                saveRecipeToFile(userId, category, recipeId, context)
             }
         }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
         builder.show()
     }
-    private fun saveRecipeToServer(userId: String, category: String, recipeId: String, context: Context) {
+    private fun saveRecipeToFile(userId: String, category: String, recipeId: String, context: Context) {
         val request = RecipeSaveRequest(userId, category, recipeId)
 
         RetrofitClient.getClient().create(RecipeApiService::class.java)
             .saveRecipe(request).enqueue(object : Callback<SaveResponse> {
-            override fun onResponse(call: Call<SaveResponse>, response: Response<SaveResponse>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(context, "Recipe saved to clipboard!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Error: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                override fun onResponse(call: Call<SaveResponse>, response: Response<SaveResponse>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(context, "Recipe saved to ${category}!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Error: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
-            override fun onFailure(call: Call<SaveResponse>, t: Throwable) {
-                Toast.makeText(context, "Failed to share recipe: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<SaveResponse>, t: Throwable) {
+                    Toast.makeText(context, "Failed to save recipe: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
     private fun shareRecipe(context: Context, recipeId: String) {
         val request = ShareRequest(recipeId)

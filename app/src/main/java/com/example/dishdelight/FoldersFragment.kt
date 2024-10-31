@@ -1,6 +1,5 @@
 package com.example.dishdelight
 
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -34,8 +33,6 @@ class FoldersFragment : Fragment() {
     private var timer: CountDownTimer? = null
     private var timerRunning = false
     private var timeLeftInMillis: Long = 0
-
-    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,16 +68,24 @@ class FoldersFragment : Fragment() {
         }
         timePicker.setIs24HourView(true)
 
-        //mediaPlayer = MediaPlayer.create(this, R.raw.alarm_sound) // Add alarm sound
-
         startTimerButton.setOnClickListener {
-            startTimer()
-        }
+            val hours = timePicker.hour
+            val minutes = timePicker.minute
 
+            if (hours == 0 && minutes == 0) {
+                // If both hours and minutes are zero, show a toast
+                Toast.makeText(requireContext(), "Please enter a time.", Toast.LENGTH_SHORT).show()
+            } else if (tvCountdown.visibility == View.VISIBLE) {
+                Toast.makeText(requireContext(), "Timer has already started", Toast.LENGTH_SHORT).show()
+            } else {
+                startTimer()
+                stopTimerButton.visibility = View.VISIBLE
+                pauseTimerButton.visibility = View.VISIBLE
+            }
+        }
         stopTimerButton.setOnClickListener {
             stopTimer()
         }
-
         pauseTimerButton.setOnClickListener {
             pauseTimer()
         }
@@ -104,7 +109,6 @@ class FoldersFragment : Fragment() {
             }
         })
     }
-
     private fun startTimer() {
         val hours = timePicker.hour
         val minutes = timePicker.minute
@@ -120,28 +124,23 @@ class FoldersFragment : Fragment() {
 
             override fun onFinish() {
                 timerRunning = false
-                playAlarm()
                 updateCountdownUI() // Reset UI when finished
                 tvCountdown.visibility = View.GONE
             }
         }.start()
         timerRunning = true
     }
-
     private fun stopTimer() {
         timer?.cancel()
         timerRunning = false
-        mediaPlayer.stop() // Stop alarm if playing
         tvCountdown.visibility = View.GONE
         timePicker.visibility = View.VISIBLE
     }
-
     private fun pauseTimer() {
         stopTimer() // Cancel and reset everything
         timeLeftInMillis = 0
         updateCountdownUI()
     }
-
     private fun updateCountdownUI() {
         val hours = (timeLeftInMillis / 1000) / 3600
         val minutes = ((timeLeftInMillis / 1000) % 3600) / 60
@@ -153,14 +152,8 @@ class FoldersFragment : Fragment() {
         // Update your TextView or TimePicker with this value
         tvCountdown.text = timeFormatted
     }
-
-    private fun playAlarm() {
-        mediaPlayer.start() // Play alarm sound when timer finishes
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         timer?.cancel() // Clean up the timer to prevent memory leaks
-        mediaPlayer.release() // Release MediaPlayer resources
     }
 }

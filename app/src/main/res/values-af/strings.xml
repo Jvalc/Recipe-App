@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    fragment_settings.xml-->
+    <string name="app_name">Dish Delight</string>
+    <string name="account">Rekening</string>
+    <string name="edit_profile">Wysig Profiel</string>
+    <string name="terms_policies">Bepalings en Beleide</string>
+    <string name="notifications">Kennisgewings</string>
+    <string name="dietary_preferences">Dieetvoorkeure</string>
+    <string name="translate_and_log_out">Vertaal &amp; Teken uit</string>
+    <string name="translate">Vertaal</string>
+    <string name="log_out">Teken Uit</string>
+    <!--    activity_change_diet.xml-->
+    <string name="dietary_preference">Dieetvoorkeur</string>
+    <string name="select_dietary_preference">Kies Dieetvoorkeur</string>
+    <string name="confirm">Bevestig</string>
+    <string name="back">Terug</string>
+    <!--    activity_edit_profile.xml-->
+    <string name="name">Naam</string>
+    <string name="enter_your_name">Voer jou naam in</string>
+    <string name="email">E-pos</string>
+    <string name="user_email">Gebruiker E-pos</string>
+    <!--    activity_language_selection.xml-->
+    <string name="language_selection">Taal Seleksie</string>
+    <string name="select_language">Kies Taal</string>
+    <!--    activity_login.xml-->
+    <string name="logo_description">Logo</string>
+    <string name="sign_in">Teken In</string>
+    <string name="email_address">E-posadres</string>
+    <string name="password">Wagwoord</string>
+    <string name="login">Teken In</string>
+    <string name="forgot_password">Vergeet Wagwoord?</string>
+    <string name="continue_with_google">Gaan voort met Google</string>
+    <string name="continue_with_facebook">Gaan voort met Facebook</string>
+    <string name="continue_with_apple">Gaan voort met Apple</string>
+    <string name="sign_up_prompt">Het jy nie \'n rekening nie? Sluit aan</string>
+    <string name="email_address_hint">E-pos adres</string>
+    <string name="password_hint">Wagwoord</string>
+    <!--    activity_recipe_folder.xml-->
+    <string name="folder_name">Lêernaam</string>
+    <!--    activity_search_recipe.xml-->
+    <string name="search_results">Soekresultate</string>
+    <!--    activity_signup.xml-->
+    <string name="sign_up">Registreer</string>
+    <string name="full_name_label">Volle Naam</string>
+    <string name="full_name_hint">Jou volle naam</string>
+    <string name="email_label">E-pos Adres</string>
+    <string name="email_hint">Jou e-posadres</string>
+    <string name="password_label">Wagwoord</string>
+    <string name="confirm_password_label">Bevestig Wagwoord</string>
+    <string name="confirm_password_hint">Bevestig wagwoord</string>
+    <string name="or_sign_up_with">Of registreer met</string>
+    <!--    activity_terms.xml-->
+    <string name="terms_conditions">Bepalings en Voorwaardes</string>
+<!--    fragment_folders.xml-->
+    <string name="saved_recipes">Gestoor Resepte</string>
+    <string name="timers">Timers</string>
+    <string name="counter">Tel Af</string>
+    <string name="start_timer">Begin Timer</string>
+    <string name="stop_timer">Stop Timer</string>
+    <string name="pause_timer">Pouse Timer</string>
+    <!--    fragment_search.xml-->
+    <string name="search_for_recipe">Soek na resep</string>
+    <string name="enter_ingredients">Voer Spesifieke Bestanddeel(s) in</string>
+    <string name="enter_dietary_preferences">Voer Dieetvoorkeure in</string>
+    <string name="enter_cuisine">Voer Soort Kookkuns in</string>
+    <string name="search">Soek</string>
+    <!--    recipe_item.xml-->
+    <string name="more_button">Meer knoppie</string>
+    <string name="recipe_title">Resep Titel</string>
+    <string name="share_recipe">Deel resep</string>
+    <string name="save_recipe">Stoor resep</string>
+    <string name="download_recipe">Laai Resep Af</string>
+    <string name="cooking_time_label">Gaarmaaktyd:</string>
+    <string name="cooking_time_value">30 min</string>
+    <string name="servings_label">Porsies:</string>
+    <string name="servings_value">4 mense</string>
+    <string name="cuisine_label">Keuken</string>
+    <string name="ingredients_label">Bestanddele</string>
+    <string name="ingredients_value">• 2 koppies meel\n• 1 koppie suiker</string>
+    <string name="recipe_label">Resep</string>
+    <string name="recipe_value">Geen stappe</string>
+    <string name="notes_label">Notas</string>
+    <string name="notes_value">Geen notas nie</string>
+
+
+    </resources>

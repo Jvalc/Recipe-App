@@ -1,16 +1,102 @@
 <resources>
+<!--    fragment_settings.xml-->
     <string name="app_name">Dish Delight</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="service_account">service_account</string>
-    <string name="project_id">dishdelight-a72d1</string>
-    <string name="private_key_id">0e37ae00aca84f43c8631efc5069b523160516db</string>
-    <string name="private_key">-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDgSepCwE+qZPcW\n/pwA3eHucXFi+sTPiE7ZhcIhlh+b3wU23WU4IVilzzXerANVm3h8Xs4ewrubZKMi\nXbNZipZpNjm1PeSqv0f9aGg+ySs+O/3rJhLlKWChKBsJJ8TUWWorMJ7lUrmbJhcl\ndy0WLqPRFZ32E59nAqgkd+b4J9ZQIOgD3u/D9xy1R5f0OKj/uSi5zeQ2tA2r1CsK\nhgIXhERUHmZ7MPwTJ1tJmgg2mbNT8Pcqb3OQFzRFXWlyyZtF0NYNc91cbHE8BTpr\nNKfXgd1jSBuh7pH08c1lVaC+cuo6OtHCwM8cPlmrBsUTLqu5mBAB+Y+8WZZBtf6D\nwLln/Y2pAgMBAAECggEABDDpZVgr3OygT+AP2PXMdRzOUDnMn+6lf4vP7/n6yvo4\nwhjSvYDlA8sqj+fBs7GxJ4zLd/huUkXoBPpAgdO0whBK9YOrsFOc9COlcAfpDJOJ\nKAHZAEp8xWInGC2TsF6f3OD+lR0tvfQRImh20ZdrRPrNDfY5qC585xqM+LXg27Qq\nwCpLj8ZO2BYAZgf2JZDS7dqZ5c6QOlKDLSK5UErUljPsUrzeu0OkNi+RDD2+A7YJ\n3bvwVa20t/4HtRO2mF4j3Pi6oiIhjzi+4r5rBN0horPnP++Lig/dEiCcHkfzd2m6\nnBnYSNbqAtMvZ3H9TRw0eMQiy0m+ESdbyl0FYmo2IQKBgQD23UQD4Y4O4OpnaFRO\nOx0mL0A1OXIV/fDPQuby6UjpmHjIwNwUHWgRIUGwVC4FlhE4UJCxiY9OLlIcKECZ\ne+oaOpsQ/TH0v6VlJEmRbl6v0d6u1Qck3SQ+GqJNF9CrXOEY/da5rdHvjEA8KqCZ\nLOHGqrlFOIL1j3btFxiOLGYFCQKBgQDolsYKoBeos2S+nGIpYDI8JdciyuLlzcTx\nZdyvfM1YKk6suB9YWFZ8SSi1/odS0Ucgpw+iM0H4FB4nCjf3c0F9HQMOMn14d2Xm\nKNS3mk9CnI+3Tkro9H6ySEjsquDoKoZtGtc90QzwYXi/s+yjqEdEaIA4PVSvZz3M\noPu8CPULoQKBgQDJagiXXg2IyCuYCUBXv9VtlTm+80rI9LLod/50jK/nn3ZU3T3y\nz3dcGpU858HQ3vrXxqv3nnOk5xgpTxI96CM+GTjxqJN8zGyG1A+OL83jh8k3Pioh\nAqkSXqqzWc3wMsyZlmn+fvp9hyHVtTXpI/xmGl8lQhFfhxkSIjjvrvvh+QKBgQCU\nTQaLYdaUB4Z2Dwp77U06krohAhI4isJHVTaoYkAgNiGh+WhrETBb4N3nZRpt0Oi0\nRjEur9YhUtqC8/4JdmDMYIJBPCpKdH7xiRlQ1EAzbdYo/++9p59dF7//v1jWT78U\ntCeHz9KbNtsiCJwbIcIHOUaAFYL4sDB0WDUKiP+N4QKBgHGQRYYmainvRgO9xWJl\nY8iS8qeAAiwrujNVXaz71icxkLbHh5R1tZa/wEinSVf3ZtDaGBGnrKzVA7J2eTi7\nl7iKUulAByaz8urY4V8+HNMN6Qq12sbvA9YjAy5b21qjXQO0RfOcVr2554s6XkOh\n3ZpoQKZ31wXvTKiJzQTrHa/R\n-----END PRIVATE KEY-----\n</string>
-    <string name="client_email">firebase-adminsdk-l916r@dishdelight-a72d1.iam.gserviceaccount.com</string>
-    <string name="client_id">113148122328512334850</string>
-    <string name="auth_uri">https://accounts.google.com/o/oauth2/auth</string>
-    <string name="token_uri">https://oauth2.googleapis.com/token</string>
-    <string name="auth_provider_x509_cert_url">https://www.googleapis.com/oauth2/v1/certs</string>
-    <string name="client_x509_cert_url">https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-l916r%40dishdelight-a72d1.iam.gserviceaccount.com</string>
-    <string name="universe_domain">googleapis.com</string>
+    <string name="account">Account</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="terms_policies">Terms and Policies</string>
+    <string name="notifications">Notifications</string>
+    <string name="dietary_preferences">Dietary Preferences</string>
+    <string name="translate_and_log_out">Translate &amp; Log Out</string>
+    <string name="translate">Translate</string>
+    <string name="log_out">Log Out</string>
+<!--    activity_change_diet.xml-->
+    <string name="dietary_preference">Dietary Preference</string>
+    <string name="select_dietary_preference">Select Dietary Preference</string>
+    <string name="confirm">Confirm</string>
+    <string name="back">Back</string>
+<!--    activity_edit_profile.xml-->
+    <string name="name">Name</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="email">Email</string>
+    <string name="user_email">User Email</string>
+<!--    activity_language_selection.xml-->
+    <string name="language_selection">Language Selection</string>
+    <string name="select_language">Select Language</string>
+<!--    activity_login.xml-->
+    <string name="logo_description">Logo</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email_address">Email address</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_apple">Continue with Apple</string>
+    <string name="sign_up_prompt">Don\'t have an account? Sign up</string>
+    <string name="email_address_hint">Email address</string>
+    <string name="password_hint">Password</string>
+<!--    activity_recipe_folder.xml-->
+    <string name="folder_name">Lêernaam</string>
+<!--    activity_search_recipe.xml-->
+    <string name="search_results">Search results</string>
+<!--    activity_signup.xml-->
+    <string name="sign_up">Sign Up</string>
+    <string name="full_name_label">Full Name</string>
+    <string name="full_name_hint">Your full name</string>
+    <string name="email_label">Email Address</string>
+    <string name="email_hint">Your email address</string>
+    <string name="password_label">Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="or_sign_up_with">Or Sign up with</string>
+<!--    activity_terms.xml-->
+    <string name="terms_conditions">Terms and Conditions</string>
+<!--fragment_folders.xml-->
+    <string name="saved_recipes">Saved Recipes</string>
+    <string name="timers">Timers</string>
+    <string name="counter">Counter</string>
+    <string name="start_timer">Start Timer</string>
+    <string name="stop_timer">Stop Timer</string>
+    <string name="pause_timer">Pause Timer</string>
+<!--    fragment_search.xml-->
+    <string name="search_for_recipe">Search for recipe</string>
+    <string name="enter_ingredients">Enter Specific Ingredient(s)</string>
+    <string name="enter_dietary_preferences">Enter Dietary Preferences</string>
+    <string name="enter_cuisine">Enter Type Of Cuisine</string>
+    <string name="search">Search</string>
+<!--    recipe_item.xml-->
+    <string name="more_button">More button</string>
+    <string name="recipe_title">Recipe Title</string>
+    <string name="share_recipe">Share recipe</string>
+    <string name="save_recipe">Save recipe</string>
+    <string name="download_recipe">Download Recipe</string>
+    <string name="cooking_time_label">Cooking Time:</string>
+    <string name="cooking_time_value">30 mins</string>
+    <string name="servings_label">Servings:</string>
+    <string name="servings_value">4 people</string>
+    <string name="cuisine_label">Cuisine</string>
+    <string name="ingredients_label">Ingredients</string>
+    <string name="ingredients_value">• 2 cups of flour\n• 1 cup of sugar</string>
+    <string name="recipe_label">Recipe</string>
+    <string name="recipe_value">No steps</string>
+    <string name="notes_label">Notes</string>
+    <string name="notes_value">No notes</string>
+
+
+
+
+
+    <!-- Sensitive data, set as non-translatable -->
+    <string name="msg_token_fmt" translatable="false">FCM Token: %1$s</string>
+    <string name="service_account" translatable="false">service_account</string>
+    <string name="project_id" translatable="false">dishdelight-a72d1</string>
+    <string name="private_key_id" translatable="false">0e37ae00aca84f43c8631efc5069b523160516db</string>
+    <string name="private_key" translatable="false">-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDgSepCwE+qZPcW\n/pwA3eHucXFi+sTPiE7ZhcIhlh+b3wU23WU4IVilzzXerANVm3h8Xs4ewrubZKMi\nXbNZipZpNjm1PeSqv0f9aGg+ySs+O/3rJhLlKWChKBsJJ8TUWWorMJ7lUrmbJhcl\ndy0WLqPRFZ32E59nAqgkd+b4J9ZQIOgD3u/D9xy1R5f0OKj/uSi5zeQ2tA2r1CsK\nhgIXhERUHmZ7MPwTJ1tJmgg2mbNT8Pcqb3OQFzRFXWlyyZtF0NYNc91cbHE8BTpr\nNKfXgd1jSBuh7pH08c1lVaC+cuo6OtHCwM8cPlmrBsUTLqu5mBAB+Y+8WZZBtf6D\nwLln/Y2pAgMBAAECggEABDDpZVgr3OygT+AP2PXMdRzOUDnMn+6lf4vP7/n6yvo4\nwhjSvYDlA8sqj+fBs7GxJ4zLd/huUkXoBPpAgdO0whBK9YOrsFOc9COlcAfpDJOJ\nKAHZAEp8xWInGC2TsF6f3OD+lR0tvfQRImh20ZdrRPrNDfY5qC585xqM+LXg27Qq\nwCpLj8ZO2BYAZgf2JZDS7dqZ5c6QOlKDLSK5UErUljPsUrzeu0OkNi+RDD2+A7YJ\n3bvwVa20t/4HtRO2mF4j3Pi6oiIhjzi+4r5rBN0horPnP++Lig/dEiCcHkfzd2m6\nnBnYSNbqAtMvZ3H9TRw0eMQiy0m+ESdbyl0FYmo2IQKBgQD23UQD4Y4O4OpnaFRO\nOx0mL0A1OXIV/fDPQuby6UjpmHjIwNwUHWgRIUGwVC4FlhE4UJCxiY9OLlIcKECZ\ne+oaOpsQ/TH0v6VlJEmRbl6v0d6u1Qck3SQ+GqJNF9CrXOEY/da5rdHvjEA8KqCZ\nLOHGqrlFOIL1j3btFxiOLGYFCQKBgQDolsYKoBeos2S+nGIpYDI8JdciyuLlzcTx\nZdyvfM1YKk6suB9YWFZ8SSi1/odS0Ucgpw+iM0H4FB4nCjf3c0F9HQMOMn14d2Xm\nKNS3mk9CnI+3Tkro9H6ySEjsquDoKoZtGtc90QzwYXi/s+yjqEdEaIA4PVSvZz3M\noPu8CPULoQKBgQDJagiXXg2IyCuYCUBXv9VtlTm+80rI9LLod/50jK/nn3ZU3T3y\nz3dcGpU858HQ3vrXxqv3nnOk5xgpTxI96CM+GTjxqJN8zGyG1A+OL83jh8k3Pioh\nAqkSXqqzWc3wMsyZlmn+fvp9hyHVtTXpI/xmGl8lQhFfhxkSIjjvrvvh+QKBgQCU\nTQaLYdaUB4Z2Dwp77U06krohAhI4isJHVTaoYkAgNiGh+WhrETBb4N3nZRpt0Oi0\nRjEur9YhUtqC8/4JdmDMYIJBPCpKdH7xiRlQ1EAzbdYo/++9p59dF7//v1jWT78U\ntCeHz9KbNtsiCJwbIcIHOUaAFYL4sDB0WDUKiP+N4QKBgHGQRYYmainvRgO9xWJl\nY8iS8qeAAiwrujNVXaz71icxkLbHh5R1tZa/wEinSVf3ZtDaGBGnrKzVA7J2eTi7\nl7iKUulAByaz8urY4V8+HNMN6Qq12sbvA9YjAy5b21qjXQO0RfOcVr2554s6XkOh\n3ZpoQKZ31wXvTKiJzQTrHa/R\n-----END PRIVATE KEY-----\n</string>
+    <string name="client_email" translatable="false">firebase-adminsdk-l916r@dishdelight-a72d1.iam.gserviceaccount.com</string>
+    <string name="client_id" translatable="false">113148122328512334850</string>
+    <string name="auth_uri" translatable="false">https://accounts.google.com/o/oauth2/auth</string>
+    <string name="token_uri" translatable="false">https://oauth2.googleapis.com/token</string>
+    <string name="auth_provider_x509_cert_url" translatable="false">https://www.googleapis.com/oauth2/v1/certs</string>
+    <string name="client_x509_cert_url" translatable="false">https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-l916r%40dishdelight-a72d1.iam.gserviceaccount.com</string>
+    <string name="universe_domain" translatable="false">googleapis.com</string>
 </resources>

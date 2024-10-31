@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,7 +93,6 @@ class ChangeDietActivity : AppCompatActivity() {
                 }
             })
     }
-
     private fun showDietsDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Select Diet")

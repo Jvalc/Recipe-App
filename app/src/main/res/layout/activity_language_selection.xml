@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ChangeDietActivity">
+    tools:context=".LanguageSelectionActivity">
 
+    <!-- Top Layout with Back Button and Title -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
         android:layout_marginEnd="15dp">
 
         <ImageButton
-            android:id="@+id/backBtn5"
+            android:id="@+id/backBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/baseline_arrow_back_ios_24"
@@ -26,16 +27,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dietary_preference"
+            android:text="@string/language_selection"
             android:textSize="25sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical" />
 
     </LinearLayout>
 
+    <!-- Card View for Language Selection -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/dietary_card"
+        android:id="@+id/language_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -48,9 +50,9 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Multi-Select Spinner -->
+            <!-- Language Select Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/selectDiet"
+                android:id="@+id/selectLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp">
@@ -61,7 +63,7 @@
                     android:background="#FCFCFC">
 
                     <TextView
-                        android:id="@+id/tvDiets"
+                        android:id="@+id/tvLanguage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -70,7 +72,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:hint="@string/select_dietary_preference" />
+                        android:hint="@string/select_language" />
 
                     <ImageView
                         android:layout_width="40dp"
@@ -94,8 +96,7 @@
                 android:layout_gravity="end"
                 android:textSize="18sp"
                 android:padding="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>
