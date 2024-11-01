@@ -1,0 +1,79 @@
+# This is a basic workflow to help you get started with Actions
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Set up JDK 11 for the Android project
+    env:
+      JAVA_HOME_11_X64: /usr/lib/jvm/java-11-openjdk-amd64
+      ANDROID_SDK_ROOT: /opt/android-sdk
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    
+      # Step 1: Check out the code
+       - name: Checkout code
+         uses: actions/checkout@v4
+
+      # Step 2: Set up Java JDK 11 for Android/Kotlin
+       - name: Set up JDK 11
+         uses: actions/setup-java@v3
+         with:
+          distribution: 'zulu'
+          java-version: '11'
+          
+      # Step 3: Set up the Android SDK
+       - name: Set up Android SDK
+         uses: android-actions/setup-android@v2
+         with:
+          api-level: 31       # Adjust according to your project’s target API
+          build-tools: 31.0.0  # Adjust according to your project’s build tools version
+
+      # Step 4: Cache Gradle dependencies to speed up builds
+       - name: Cache Gradle packages
+         uses: actions/cache@v3
+         with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Step 5: Build the project with Gradle (for Kotlin project)
+       - name: Build with Gradle
+         run: ./gradlew build
+
+      # Step 6: Run tests
+       - name: Run tests
+         run: ./gradlew test
+         
+      # Step 7 :Run Build Project
+       - name: Build gradle project
+         run: ./gradlew build
+
+      # Step 8: Assemble a release APK
+       - name: Assemble Release APK
+         run: ./gradlew assembleRelease
+         
+      # Step 9: Upload APK artifact
+       - name: Upload APK
+         if: always()
+         uses: actions/upload-artifact@v3
+         with:
+          name: app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
