@@ -21,7 +21,7 @@ jobs:
 
     # Set up JDK 11 for the Android project
     env:
-      JAVA_HOME_11_X64: /usr/lib/jvm/java-11-openjdk-amd64
+      JAVA_HOME_11_X64: /usr/lib/jvm/java-17-openjdk-amd64
       ANDROID_SDK_ROOT: /opt/android-sdk
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -31,12 +31,12 @@ jobs:
        - name: Checkout code
          uses: actions/checkout@v4
 
-      # Step 2: Set up Java JDK 11 for Android/Kotlin
-       - name: Set up JDK 11
+      # Step 2: Set up Java JDK 17 for Android/Kotlin
+       - name: Set up JDK 17
          uses: actions/setup-java@v3
          with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
           
       # Step 3: Set up the Android SDK
        - name: Set up Android SDK
