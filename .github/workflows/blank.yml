@@ -54,17 +54,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 5: Build the project with Gradle (for Kotlin project)
+      # Step 5: Make gradlew executable
+       - name: Grant execute permission for gradlew
+         run: chmod +x ./gradlew
+
+      # Step 6: Build the project with Gradle 
        - name: Build with Gradle
          run: ./gradlew build
 
-      # Step 6: Run tests
+      # Step 7: Run tests
        - name: Run tests
          run: ./gradlew test
-         
-      # Step 7 :Run Build Project
-       - name: Build gradle project
-         run: ./gradlew build
 
       # Step 8: Assemble a release APK
        - name: Assemble Release APK
