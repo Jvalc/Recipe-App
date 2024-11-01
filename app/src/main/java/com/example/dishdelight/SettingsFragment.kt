@@ -1,16 +1,24 @@
 package com.example.dishdelight
 
+import android.Manifest
 import android.app.AlertDialog
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Switch
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
 
@@ -58,7 +66,6 @@ class SettingsFragment : Fragment() {
             promptLogOut()
         }
     }
-
     private fun promptLogOut() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Are you sure you want to sign out?")

@@ -1,5 +1,9 @@
 package com.example.dishdelight
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+
 data class SearchResponse(val results: List<Recipe>) //x
 data class RecipeSaveRequest(val userId: String, val category: String, val recipeId: String) //x
 data class SaveResponse(val message: String, val id: String) //x
@@ -14,18 +18,26 @@ data class UserProfileUpdateRequest( val userId: String, val username: String) /
 data class UpdateResponse( val message: String) //x
 data class UpdateDietaryPreferencesRequest( val dietaryPreferences: List<String>) //x
 data class FcmTokenRequest(val fcmToken: String) //x
-data class Recipe(
-    val id: String = "",
-    val recipeName: String = "",
-    val cookingTime: String = "",
-    val cuisineType: String= "",
-    val dietaryPreferences: List<String> = listOf(),
-    val servingSize: String = "",
 
-    val imageUrl: String = "",
-    val ingredients: List<String> = listOf(),
-    val steps: List<String> = listOf()
+@Entity(tableName = "Recipes")
+data class Recipe(
+    @PrimaryKey var id: String = "",
+    var recipeName: String = "",
+    var cookingTime: String = "",
+    var cuisineType: String = "",
+    var servingSize: String = "",
+    var imageUrl: String = "",
+
+    @TypeConverters(StringListConverter::class)
+    var dietaryPreferences: List<String> = listOf(),
+
+    @TypeConverters(StringListConverter::class)
+    var ingredients: List<String> = listOf(),
+
+    @TypeConverters(StringListConverter::class)
+    var steps: List<String> = listOf(),
 )
+
 
 
 

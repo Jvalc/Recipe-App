@@ -1,16 +1,26 @@
 package com.example.dishdelight
 
+import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkRequest
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,6 +29,12 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var database: AppDatabase
+
+
+    private val REQUEST_CODE = 1001 // Define a request code
+    private val PREFS_NAME = "AppPreferences"
+    private val PREFS_KEY_PERMISSION_REQUESTED = "permission_requested"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         loadLocale() // Load the saved locale before setting the content view
@@ -29,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
 
+        requestNotificationPermission()
         // Get FCM registration token
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -73,6 +90,17 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)
             .commit()
+    }
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    101
+                )
+            }
+        }
     }
     private fun sendFcmTokenToServer(userId: String, fcmToken: String) {
         val fcmTokenRequest = FcmTokenRequest(fcmToken)

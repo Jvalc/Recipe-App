@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.net.ConnectivityManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +29,8 @@ class RecipeAdapter(
     private val userId: String,
     private val recipeList: List<Recipe>) :
     RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
+    private lateinit var recipeDao: RecipeDao
+
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val recipeTitle : TextView = itemView.findViewById(R.id.recipeTitle)
         val cookingTimeValue: TextView = itemView.findViewById(R.id.cookingTimeValue)
@@ -60,7 +69,11 @@ class RecipeAdapter(
             .joinToString("\n") { "step $it" }
 
         var recipeId = recipe.id
+
         getUserNotes(userId, recipeId, holder.context, holder)
+
+        val db = DatabaseBuilder.buildDatabase(holder.context)
+        recipeDao = db.recipeDao()
 
         // Load recipe image (use Glide or any image loading library)
         Glide.with(holder.itemView.context)
@@ -89,6 +102,12 @@ class RecipeAdapter(
             promptFileNameAndSaveRecipe(userId, recipeId, holder.context)
 
         }
+        holder.downloadBtn.setOnClickListener{
+            CoroutineScope(Dispatchers.IO).launch {
+                recipeDao.insertRecipes(listOf(recipe)) // Use a list with one recipe
+            }
+        }
+
 
         holder.ingredientsDropdown.setOnClickListener {
             if (holder.ingredientsValue.visibility == View.VISIBLE) {

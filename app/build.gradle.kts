@@ -60,4 +60,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation ("com.google.code.gson:gson:2.8.9")
     implementation ("androidx.biometric:biometric-ktx:1.4.0-alpha02")
+    implementation ("androidx.room:room-runtime:2.5.0")
+    kapt ("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+    implementation ("androidx.room:room-ktx:2.4.3")
+    testImplementation ("org.mockito:mockito-core:3.9.0")
 }
