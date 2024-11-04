@@ -38,6 +38,8 @@ class Login : AppCompatActivity() {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+
+        // Configure Google Sign-In options
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.client_id)) // Replace with your web client ID
             .requestEmail()
@@ -50,7 +52,7 @@ class Login : AppCompatActivity() {
         googleSignInButton = findViewById(R.id.googleSignInButton)
         signUpTextView = findViewById(R.id.signUpTextView)
 
-        // Set listeners
+        // Set onClick listeners for buttons and text views
         loginButton.setOnClickListener { logIn() }
         googleSignInButton.setOnClickListener { signInWithGoogle() }
         signUpTextView.setOnClickListener {
@@ -60,11 +62,11 @@ class Login : AppCompatActivity() {
 
     }
 
-    // Biometric support check
+    // Check if biometric support is available
     private fun checkBiometricSupport(): Boolean {
         val biometricManager = BiometricManager.from(this)
         return when (biometricManager.canAuthenticate()) {
-            BiometricManager.BIOMETRIC_SUCCESS -> true
+            BiometricManager.BIOMETRIC_SUCCESS -> true // Biometric authentication is supported
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
                 Toast.makeText(this, "No biometric hardware available", Toast.LENGTH_LONG).show()
                 false
@@ -81,7 +83,7 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // Setup biometric prompt
+    // Setup biometric authentication prompt
     private fun setupBiometricPrompt() {
         val executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -103,6 +105,7 @@ class Login : AppCompatActivity() {
             }
         })
 
+        // Create the biometric prompt information
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Login with Fingerprint")
             .setSubtitle("Use biometric authentication to log in")
@@ -115,10 +118,11 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // Firebase login with saved credentials after fingerprint success
+    // Automatically log in with Firebase if the user is already authenticated
     private fun autoLoginWithFirebase() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
+            // User is authenticated, proceed to MainActivity
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -127,16 +131,18 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // Email and password login method
+    // Method for email and password login
     fun logIn() {
         val email = emailEditText.text.toString()
         val pass = passwordEditText.text.toString()
 
+        // Check for empty fields
         if (email.isBlank() || pass.isBlank()) {
             Toast.makeText(this, "Email and password can't be blank", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Authenticate user with email and password
         auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_SHORT).show()
@@ -149,18 +155,21 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // Google Sign-In method
+    // Method to sign in with Google
     private fun signInWithGoogle() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, 10001)
+        val signInIntent = googleSignInClient.signInIntent // Get Google sign-in intent
+        startActivityForResult(signInIntent, 10001) // Start activity for result
     }
 
+    // Handle the result of Google sign-in
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 10001) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             val account = task.getResult(ApiException::class.java)
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
+            // Sign in with Firebase using Google credentials
             auth.signInWithCredential(credential).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val intent = Intent(this, MainActivity::class.java)
@@ -173,9 +182,11 @@ class Login : AppCompatActivity() {
         }
     }
 
+    // Automatically navigate to MainActivity if the user is already authenticated on start
     override fun onStart() {
         super.onStart()
         if (auth.currentUser != null) {
+            // User is already signed in, go to MainActivity
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

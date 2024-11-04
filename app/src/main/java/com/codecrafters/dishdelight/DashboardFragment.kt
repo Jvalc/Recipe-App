@@ -35,18 +35,21 @@ class DashboardFragment : Fragment() {
         recipeRecycler = view.findViewById(R.id.recommendationsRecyclerView)
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
 
+        // Initialize the database and DAO
         val db = DatabaseBuilder.buildDatabase(requireContext())
         recipeDao = db.recipeDao()
 
-        // Set layout manager
+        // Set RecyclerView layout manager
         recipeRecycler.layoutManager = LinearLayoutManager(requireContext())
 
+        // Check network connectivity to decide data source
         if (isOnline()) {
             fetchRecipes(userid)  // Fetch from API if online
         } else {
             loadFromDatabase()  // Load from SQLite if offline
         }
     }
+    // Fetches recipes from the API if online
     private fun fetchRecipes( userid : String) {
         RetrofitClient.getClient().create(RecipeApiService::class.java)
             .getRecipes().enqueue(object : Callback<List<Recipe>> {
@@ -70,6 +73,8 @@ class DashboardFragment : Fragment() {
                 }
             })
     }
+
+    // Map to use a default image if no image URL is provided
     private fun loadFromDatabase() {
         Thread {
             val recipes = recipeDao.getAllRecipes()
@@ -83,7 +88,9 @@ class DashboardFragment : Fragment() {
         }.start()
     }
 
+    // Updates UI with the list of recipes
     private fun updateUI(recipes: List<Recipe>) {
+        // Map to use a default image if no image URL is provided
         val updatedRecipes = recipes.map {
             // Use a default image if the URL is empty
             if (it.imageUrl.isEmpty()) {
@@ -94,6 +101,7 @@ class DashboardFragment : Fragment() {
         recipeRecycler.adapter = recipeAdapter
     }
 
+    // Checks if the device is online by verifying network connectivity
     @SuppressLint("ServiceCast")
     private fun isOnline(): Boolean {
         val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

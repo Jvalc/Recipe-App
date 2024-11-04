@@ -38,9 +38,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
+        // Get the current user's ID from Firebase Authentication
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
 
+        // Request notification permission
         requestNotificationPermission()
+
         // Get FCM registration token
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
             sendFcmTokenToServer(userid, token)
         }
 
+        // Set a listener for bottom navigation item selection
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_dashboard -> {
@@ -80,14 +84,19 @@ class MainActivity : AppCompatActivity() {
             loadFragment(DashboardFragment())
         }
     }
+    // Method to load a fragment into the container
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)
             .commit()
     }
+
+    // Method to request notification permission
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Check if permission has been granted
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                // Request the permission
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -96,9 +105,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    // Method to send the FCM token to the server
     private fun sendFcmTokenToServer(userId: String, fcmToken: String) {
         val fcmTokenRequest = FcmTokenRequest(fcmToken)
 
+        // Create a UserService instance and send the token
         RetrofitClient.getClient().create(UserService::class.java)
             .sendFcmToken(userId, fcmTokenRequest).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -116,16 +128,20 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
+
+    // Method to load the saved locale from shared preferences
     private fun loadLocale() {
         val sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE)
         val language = sharedPreferences.getString("My_Lang", "en") // Default is English
         setLocale(language ?: "en")
     }
+
+    // Method to set the application's locale
     private fun setLocale(languageCode: String) {
         val locale = Locale(languageCode)
-        Locale.setDefault(locale)
+        Locale.setDefault(locale) // Set the default locale
         val config = Configuration()
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
+        config.setLocale(locale) // Update the configuration with the new locale
+        resources.updateConfiguration(config, resources.displayMetrics) // Apply the configuration
     }
 }

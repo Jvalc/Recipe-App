@@ -55,10 +55,11 @@ class FoldersFragment : Fragment() {
 
         folderRecycler.layoutManager = LinearLayoutManager(context)
 
+        // Fetch and display folder names for the current user
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
-
         fetchFolders(userid)
 
+        // Set time picker to 24-hour format and default to 00:00
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             timePicker.hour = 0
             timePicker.minute = 0
@@ -68,10 +69,12 @@ class FoldersFragment : Fragment() {
         }
         timePicker.setIs24HourView(true)
 
+        // Start timer when button is clicked
         startTimerButton.setOnClickListener {
             val hours = timePicker.hour
             val minutes = timePicker.minute
 
+            // Check if hours and minutes are both zero
             if (hours == 0 && minutes == 0) {
                 // If both hours and minutes are zero, show a toast
                 Toast.makeText(requireContext(), "Please enter a time.", Toast.LENGTH_SHORT).show()
@@ -83,13 +86,18 @@ class FoldersFragment : Fragment() {
                 pauseTimerButton.visibility = View.VISIBLE
             }
         }
+
+        // Stop timer when button is clicked
         stopTimerButton.setOnClickListener {
             stopTimer()
         }
+
+        // Pause timer when button is clicked
         pauseTimerButton.setOnClickListener {
             pauseTimer()
         }
     }
+    // Fetch folders associated with the user ID
     private fun fetchFolders( userid : String) {
         RetrofitClient.getClient().create(RecipeApiService::class.java)
             .getCategories(userid).enqueue(object : Callback<List<String>> {
@@ -109,6 +117,8 @@ class FoldersFragment : Fragment() {
             }
         })
     }
+
+    // Start countdown timer based on selected hours and minutes
     private fun startTimer() {
         val hours = timePicker.hour
         val minutes = timePicker.minute
@@ -116,38 +126,44 @@ class FoldersFragment : Fragment() {
         tvCountdown.visibility = View.VISIBLE
         timePicker.visibility = View.GONE
 
+        // Initialize and start countdown timer
         timer = object : CountDownTimer(timeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftInMillis = millisUntilFinished
-                updateCountdownUI()
+                updateCountdownUI() // Update countdown display every second
             }
 
             override fun onFinish() {
                 timerRunning = false
-                updateCountdownUI() // Reset UI when finished
+                updateCountdownUI() // Reset UI when timer finishes
                 tvCountdown.visibility = View.GONE
             }
         }.start()
         timerRunning = true
     }
+
+    // Stop the timer and reset UI elements
     private fun stopTimer() {
-        timer?.cancel()
+        timer?.cancel() // Cancel countdown
         timerRunning = false
         tvCountdown.visibility = View.GONE
         timePicker.visibility = View.VISIBLE
     }
+
+    // Pause the timer by stopping it and resetting time left
     private fun pauseTimer() {
-        stopTimer() // Cancel and reset everything
-        timeLeftInMillis = 0
-        updateCountdownUI()
+        stopTimer() // Stop timer
+        timeLeftInMillis = 0 // Reset remaining time
+        updateCountdownUI() // Update UI to show reset state
     }
+
+    // Update the countdown display with hours, minutes, and seconds
     private fun updateCountdownUI() {
         val hours = (timeLeftInMillis / 1000) / 3600
         val minutes = ((timeLeftInMillis / 1000) % 3600) / 60
         val seconds = (timeLeftInMillis / 1000) % 60
 
-        // Update timer UI (e.g., show hours, minutes, seconds)
-        // Example:
+        // Format and display remaining time
         val timeFormatted = String.format("%02d:%02d:%02d", hours, minutes, seconds)
         // Update your TextView or TimePicker with this value
         tvCountdown.text = timeFormatted

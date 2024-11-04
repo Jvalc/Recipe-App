@@ -19,6 +19,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
     private lateinit var tvLanguage: TextView
     private lateinit var btnConfirmLanguage: Button
 
+    // Array of available languages
     private val languageArray = arrayOf("English", "Zulu", "Afrikaans")
     private var selectedLanguageIndex = -1
 
@@ -28,49 +29,55 @@ class LanguageSelectionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_language_selection)
 
         btnBack = findViewById(R.id.backBtn)
-        selectLanguageCard = findViewById(R.id.selectLanguage) // Now correctly assigned as MaterialCardView
+        selectLanguageCard = findViewById(R.id.selectLanguage)
         tvLanguage = findViewById(R.id.tvLanguage)
         btnConfirmLanguage = findViewById(R.id.confirmButton)
 
+        // Set onClick listener for the back button
         btnBack.setOnClickListener {
             finish()
         }
 
+        // Set onClick listener for the language selection card
         selectLanguageCard.setOnClickListener {
             showLanguageDialog()
         }
 
+        // Set onClick listener for the confirm button
         btnConfirmLanguage.setOnClickListener {
             confirmLanguageSelection()
         }
     }
 
+    // Function to display a dialog for selecting the language
     private fun showLanguageDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Select Language")
+        val builder = AlertDialog.Builder(this) // Create an AlertDialog builder
+        builder.setTitle("Select Language") // Set the dialog title
             .setSingleChoiceItems(languageArray, selectedLanguageIndex) { _, which ->
-                selectedLanguageIndex = which
+                selectedLanguageIndex = which // Update the selected language index
             }
-            .setPositiveButton("Ok") { dialog, _ ->
+            .setPositiveButton("Ok") { dialog, _ -> // Positive button to confirm selection
                 if (selectedLanguageIndex != -1) {
-                    tvLanguage.text = languageArray[selectedLanguageIndex]
+                    tvLanguage.text = languageArray[selectedLanguageIndex] // Update TextView with selected language
                 }
-                dialog.dismiss()
+                dialog.dismiss() // Dismiss the dialog
             }
             .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
+                dialog.dismiss() // Dismiss the dialog on cancel
             }
-            .setNeutralButton("Clear") { dialog, _ ->
-                selectedLanguageIndex = -1
-                tvLanguage.text = ""
-                dialog.dismiss()
+            .setNeutralButton("Clear") { dialog, _ -> // Neutral button to clear selection
+                selectedLanguageIndex = -1 // Reset selection index
+                tvLanguage.text = "" // Clear the displayed language
+                dialog.dismiss() // Dismiss the dialog
             }
 
         builder.show()
     }
 
+    // Function to confirm the language selection
     private fun confirmLanguageSelection() {
-        if (selectedLanguageIndex != -1) {
+        if (selectedLanguageIndex != -1) { // Check if a language is selected
+            // Map the selected index to the corresponding language code
             val selectedLanguageCode = when (selectedLanguageIndex) {
                 0 -> "en"
                 1 -> "zu"
@@ -83,7 +90,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
             editor.putString("My_Lang", selectedLanguageCode)
             editor.apply()
 
-            // Show a toast message
+            // Show a toast message to indicate the selected language
             Toast.makeText(
                 this,
                 "${languageArray[selectedLanguageIndex]} selected as the language.",
@@ -96,6 +103,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
+            // Show a toast message if no language is selected
             Toast.makeText(this, "Please select a language", Toast.LENGTH_SHORT).show()
         }
     }

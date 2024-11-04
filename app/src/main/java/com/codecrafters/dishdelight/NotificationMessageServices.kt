@@ -11,6 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 class NotificationMessageServices : FirebaseMessagingService() {
+    // Called when a message is received from Firebase Cloud Messaging (FCM)
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Handle FCM messages here.
         remoteMessage.notification?.let {
@@ -18,6 +19,7 @@ class NotificationMessageServices : FirebaseMessagingService() {
         }
     }
 
+    // Function to build and display a notification
     private fun sendNotification(messageBody: String?) {
         val intent = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

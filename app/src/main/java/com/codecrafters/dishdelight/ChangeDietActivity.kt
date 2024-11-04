@@ -3,6 +3,7 @@ package com.codecrafters.dishdelight
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -20,6 +21,8 @@ class ChangeDietActivity : AppCompatActivity() {
     private lateinit var selectCard : MaterialCardView
     private lateinit var tvDiets : TextView
     private lateinit var selectedDiets: BooleanArray
+
+    // Array to store the diet options and selected items
     val dietList = ArrayList<Int>()
     val dietArray = arrayOf(
         "Fast food",
@@ -46,8 +49,10 @@ class ChangeDietActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_diet)
+        // Get current user ID from FirebaseAuth
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
 
+        // Initialize UI components
         btnBack = findViewById(R.id.backBtn5)
         selectCard = findViewById(R.id.selectDiet)
         tvDiets = findViewById(R.id.tvDiets)
@@ -56,14 +61,17 @@ class ChangeDietActivity : AppCompatActivity() {
 
         selectedDiets = BooleanArray(dietArray.size)
 
+        // Set up the back button to finish the activity
         btnBack.setOnClickListener{
             finish()
         }
 
+        // Set up the diet selection card to show diet options dialog
         selectCard.setOnClickListener{
             showDietsDialog()
         }
 
+        // Set up the update button to send selected diets to the server
         btnUpdateDiet.setOnClickListener {
             val text = tvDiets.text.toString()
             val stringList = text.split(",").map { it.trim() } // Using `trim()` to remove any leading/trailing spaces
@@ -71,19 +79,22 @@ class ChangeDietActivity : AppCompatActivity() {
             updateUserPreferences(userid, stringList )
         }
     }
+    // Function to update user dietary preferences using Retrofit
     fun updateUserPreferences(userId: String, preferences: List<String>) {
 
         val request = UpdateDietaryPreferencesRequest(preferences)
 
-        // Make the PATCH request
+        // Making a PATCH request through Retrofit
         RetrofitClient.getClient().create(UserService::class.java)
             .updateDietaryPreferences(userId, request)
             .enqueue(object : Callback<UpdateResponse> {
                 override fun onResponse(call: Call<UpdateResponse>, response: Response<UpdateResponse>) {
                     if (response.isSuccessful) {
+                        Log.d("ChangeDietActivity", "Preferences updated successfully for user $userId")
                         Toast.makeText(this@ChangeDietActivity, "Preference updated successfully", Toast.LENGTH_SHORT).show()
                         finish()
                     } else {
+                        Log.e("ChangeDietActivity", "Failed to update preferences for user $userId, response code: ${response.code()}")
                         Toast.makeText(this@ChangeDietActivity, "Failed to update preferences", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -93,11 +104,13 @@ class ChangeDietActivity : AppCompatActivity() {
                 }
             })
     }
+    // Function to display a dialog for selecting diets
     fun showDietsDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Select Diet")
             .setCancelable(false)
             .setMultiChoiceItems(dietArray, selectedDiets) { dialog, which, isChecked ->
+                Log.d("ChangeDietActivity", "${dietArray[which]} option selected: $isChecked")
                 if (isChecked) {
                     dietList.add(which)
                 } else {

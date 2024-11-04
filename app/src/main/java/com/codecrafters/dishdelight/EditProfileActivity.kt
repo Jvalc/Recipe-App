@@ -20,6 +20,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        // Get the current user ID and email from Firebase Authentication
         val userid = FirebaseAuth.getInstance().currentUser!!.uid
         val userEmail = FirebaseAuth.getInstance().currentUser!!.email
 
@@ -28,22 +29,26 @@ class EditProfileActivity : AppCompatActivity() {
         tvEmail = findViewById(R.id.tvEmail)
         btnUpdateProfile = findViewById(R.id.confirmButton)
 
-
+        // Set up back button to finish the activity and go back to the previous screen
         btnBack.setOnClickListener{
             finish()
         }
 
+        // Display the current user's email in the email TextView
         tvEmail.text = userEmail
 
+        // Set up the update button to trigger profile update
         btnUpdateProfile.setOnClickListener {
-            val name = etvName.text.toString()
-            updateProfile(userid, name)
+            val name = etvName.text.toString() // Get the new name from EditText
+            updateProfile(userid, name) // Call updateProfile with user ID and new name
         }
     }
-
+    // Define updateProfile method to send updated profile information to the server
     private fun updateProfile(userId: String, username: String) {
+        // Create a request object with user ID and username
         val request = UserProfileUpdateRequest(userId, username)
 
+        // Make a network call using Retrofit to update the profile
         RetrofitClient.getClient().create(UserService::class.java)
             .updateUserProfile(request).enqueue(object : Callback<UpdateResponse> {
             override fun onResponse(call: Call<UpdateResponse>, response: Response<UpdateResponse>) {

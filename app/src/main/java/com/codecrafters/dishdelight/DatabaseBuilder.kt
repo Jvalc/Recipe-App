@@ -3,23 +3,16 @@ package com.codecrafters.dishdelight
 import android.content.Context
 import androidx.room.Room
 
+// Singleton object to create and provide an instance of the database
 object DatabaseBuilder {
-
-    /* Define the migration here
-    val MIGRATION_1_2 = object : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            // Perform schema changes here
-        }
-    }*/
-
+    // Function to build and return an instance of AppDatabase
     fun buildDatabase(context: Context): AppDatabase {
+        // Use Room's database builder to create the database instance
         return Room.databaseBuilder(
-            context.applicationContext,
-            AppDatabase::class.java,
-            "recipe-database"
+            context.applicationContext,            // Application context to avoid memory leaks
+            AppDatabase::class.java,               // The database class to instantiate
+            "recipe-database"                      // Name of the database file
         )
-            //.addMigrations(MIGRATION_1_2) // Add the migration here
-            .build()
+            .build()                              // Build and return the database instance
     }
-
 }
