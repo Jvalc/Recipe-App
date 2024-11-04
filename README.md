@@ -38,7 +38,7 @@ https://github.com/JunivevaAlcandra/DishDelightAPI.git and this is apidomain: ht
 **Email and Password**
 - Email: test5@example.com
 - Password: test12345
-**Google SSO**
+</br> **Google SSO**
 - Email: testdishdelight@gmail.com 
 - Password: testdishdelight2024
 
