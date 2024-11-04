@@ -46,20 +46,10 @@
                 android:textColor="#000000"
                 android:padding="15dp"
                 android:paddingStart="20dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/search_bg"/>
-
-            <EditText
-                android:id="@+id/searchDiet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_dietary_preferences"
-                android:textSize="20sp"
-                android:textColor="#000000"
-                android:padding="15dp"
-                android:paddingStart="20dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/search_bg"/>
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/search_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <EditText
                 android:id="@+id/searchCuisine"

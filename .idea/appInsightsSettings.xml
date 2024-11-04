@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.dishdelight" />
-                  <option name="mobileSdkAppId" value="1:299628502847:android:a6928700345edd486cbd8a" />
+                  <option name="appId" value="com.codecrafters.dishdelight" />
+                  <option name="mobileSdkAppId" value="1:299628502847:android:eb71b10f5cc286bb6cbd8a" />
                   <option name="projectId" value="dishdelight-a72d1" />
                   <option name="projectNumber" value="299628502847" />
                 </ConnectionSetting>

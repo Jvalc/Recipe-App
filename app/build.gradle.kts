@@ -6,22 +6,22 @@ plugins {
 }
 
 android {
-    namespace = "com.example.dishdelight"
+    namespace = "com.codecrafters.dishdelight"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.dishdelight"
+        applicationId = "com.codecrafters.dishdelight"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,6 +43,8 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:24.0.3")
     implementation("androidx.biometric:biometric-ktx:1.1.0")
     implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
+    implementation("androidx.room:room-common:2.6.1")
+    implementation("androidx.test:core-ktx:1.6.1")
     kapt ("com.github.bumptech.glide:compiler:4.15.1")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
@@ -65,4 +67,5 @@ dependencies {
     implementation ("androidx.work:work-runtime-ktx:2.7.1")
     implementation ("androidx.room:room-ktx:2.4.3")
     testImplementation ("org.mockito:mockito-core:3.9.0")
+    testImplementation ("org.robolectric:robolectric:4.9.1")
 }

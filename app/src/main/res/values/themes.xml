@@ -7,6 +7,7 @@
 
     <style name="Theme.DishDelight" parent="Base.Theme.DishDelight" >
         <item name="android:windowBackground">#F1F1F1</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
 </resources>
