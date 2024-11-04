@@ -29,6 +29,7 @@ The Dish Delight is a user-friendly application designed to help users discover,
 - **Real-Time Notifications**: Firebase Cloud messaging for push-notifications.
 - **Authentication**: Firebase authentication for email and password, and google sso.
 - **Hosting**: The Rest API is hosted on Vercel.
+- **Storage**: Firebase storage to store the recipe image
 
 ## API 
 The API is now running smothly and with no problems This is the api repo:
